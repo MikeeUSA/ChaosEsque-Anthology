@@ -1,0 +1,140 @@
+Rather than use textures, often materials are used for models
+Here is a list of some. Note: Just set the material name and
+make sure your export options have material checked rather than img etc.
+(NOTE: make sure to uvunwrap anyway: otherwise the surface will have extreme black/white gloss and shade performance)
+
+red			--The color red. (no gloss etc)
+black			--The color black. (no gloss etc)
+brass			--A (dark) brass/bronzeish color, good for tacks
+copper			--Copper
+
+
+mac10-gunmetal		--Quintessential Gun Reciever material
+mac10-flat		--A dark grey / blackish non-descript matte material. Sometimes used for grips
+mac10-grip		--Colormapped Diamond grip texture
+mac10-gunmetalgrey	--Dark grey / blackish metal but not quite as dark as mac10-gunmetal
+mac10-gunmetalmedgrey	--Medium grey metal
+mac10-gunmetaltan	--Tan metal
+
+henryriflebrass		--Quintessential old western gun reciever brass.
+	
+sportsterchrome		--Shiny metal, like chrome. Used for the very edges of weapons often, or the blade-face if one wants them to shine
+
+magnum-gunmetal		--A light, drab metal
+
+leatherblack		--Black Leather (non-tiling)
+leatherwhite		--White/Cream Leather (non-tiling)
+leatherwhite2		--SnowWhite Leather (non-tiling)
+leatherdarkbrown	--Dark brown leather (non-tiling)
+leathergrey		--Grey leather
+redishwood		--A red wood (Grain: side-to-side)
+sawedoffwood		--Quintessential "wood" wood. (brown)
+cudgelwood		--Old, dried out, wood (tan)
+a300wood		--A gunstock wood (brownish) (Grain: side-to-side)
+g98wood			--A glossy gunstock wood (redish) (Grain: up-down)
+rpkwood			--A gunstock wood (dark orangeish)
+torch_wood		--darkish brown wood (Grain: up-down)
+workbenchwood1		-- light tan wood (Grain: up-down)
+workbenchwood3		-- light tan wood (Grain: up-down)
+workbenchwoodtest	-- light tan wood (Grain: up-down)
+yumibowwood		-- Colormapped wood (red-black bands) (Grain: side-to-side)
+g3-wood			-- Colormapped Tannish wood (Grain: side-to-side)
+g4-wood			-- Shiny, Glossy, Brighter Tannish wood (Grain: side-to-side)
+lightwood		-- Glossy, Light Tannish wood (Grain: side-to-side)
+m1921wood		-- Colormapped Glossy, orangish wood (Grain: up-down)
+spikedclubwood		-- very rough wood (Grain: up-down) (non-tiling)
+Bone			--A bone color
+staffflame		--A brown wood (Grain: side-to-side) 
+g3-plastic		--Colormapped Drab Glossy Plasticish
+g3-rubber		--Drab
+
+elvencapmetal		--Colormapped metal
+warhammer_head		--Dark metal, old, with shinyness on the left side for blade edges
+morgenstern_head	--Blacker/Darker version of warhammer_head
+
+colt44chrome		--Dark, Black, shiny metal
+coltlightningchrome	--Shiny, blueish metal
+
+colt44chrome2		--Shiny metal (desaturated shine, grey, shiny, light)
+colt44chrome2a		--Shiny metal, yellow tinge to shine
+colt44chrome2b		--Shiny metal, blueish tinge to shine somewhat
+
+
+eightgaugemetal		--Old metal, grey-tannish
+eightgaugemetal2	--Old metal, grey-blackish
+
+tengaugemetal		--Old metal, tannish
+tengaugemetalblade	--Old metal, not brushed metal, like a pitted metal. 
+tengaugemetal2		--Old metal, black
+tengaugemetal3		--Shiny metal, good for sword blades. (Grain: Up-Down, non-tiling)
+tengaugemetalblade3	--tengaugemetal3 but shines more
+tengaugemetal4		--Black metal with little grain (Up-Down), good for axe heads.
+tengaugemetal5		--Shiny metal with little grain (Side-to-Side), good for warhammers.
+
+bulldozerpainttex	--Orange chipping paint
+crowbartex		--Red chipping paint
+
+tankarmortan		--tan metal, Colormapped
+tankarmorolive		--olive metal
+tankarmoroliveoutside   --greenish metal, Colormapped
+tankarmorgrey		--grey metal
+tankarmordesat		--Colormapped
+tankrivet               --tan metal
+
+czskorpion-gunmetal	--browned metal as seen on the CZ Skorpion machine pistol
+czorange		--orange of said weapon's grips
+
+retropainted		--gloss and saturation colormapped shirt
+retrored		--gloss red
+fokkerpainted		--gloss red and colormapped pants/shirt
+truckpainted		--High gloss material like on a car colormapped pants/shirt
+fastcarpainted		--gloss material like on a car colormapped pants/shirt
+yugopainted		--less gloss material like on other cars colormapped pants/shirt
+sparrowpainted		--
+sparrowgrey
+sparrowblack
+sportsterchrome
+ons_shield
+sportstermirror
+sportsterglass-solid
+sportsterglass
+sportsterglass-front
+sportsterglass-red
+sportsterglass-orange
+sportsterglass-lblue
+cruizerblack            --Colormapped, but low saturation (also reflective, glossy)
+cruizerblack2		NO colormap, black, reflective, glossy, desat tinge to shine
+cruizerblack2a		NO colormap, black, reflective, glossy, yellow tinge to shine
+cruizerblack2b		NO colormap, black, reflective, glossy, blueish tinge to shine
+limopainted
+
+
+----------------------------------------------------
+Other
+----------------------------------------------------
+
+Metal_PM004		--Shiny metal, like chrome. Mapped similar to sportsterchrome
+plastic			--Plastic, mapped similar to mac10-flat
+rubber
+
+blackglowing
+blueglowing
+cyanglowing
+greenglowing
+indigoglowing
+magentaglowing
+orangeglowing
+redglowing
+violetglowing
+whiteglowing
+yellowglowing
+
+----------------------------------------------------
+Some images used sometimes
+----------------------------------------------------
+Katana_HH		--Image used often for blade material, must properly UV map.
+ak47			--Image used for ak47s, has some useful parts for wood etc.
+1911longmetal		--Image used for its black diamond textures for grips sometimes.
+1911metal		--Image used for its brown diamond textures for grips sometimes.
+shotgun2		--Image used for its barrels
+

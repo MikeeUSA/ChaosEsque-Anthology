@@ -1,0 +1,52 @@
+Files involved:
+qcsrc/server/
+defs.qh*
+t_items.qc
+cheats.qc
+autocvars.qh*
+
+In defs.qh* (note: this file, and autocvars.qh, unlike the others differs in content between branches)
+search for, say, firewall
+
+Then if we are adding a 2 new spells we'll add this:
+.float spell_phantasmalbarrier; //A phantasmal barrier (wall)
+.float start_spell_phantasmalbarrier;
+.float spell_raiseundead; //
+.float start_spell_raiseundead;
+
+.float inv_book_phantasmalbarrier;
+.float inv_scroll_phantasmalbarrier;
+.float inv_book_raiseundead;
+.float inv_scroll_raiseundead;
+
+At the appropriate lines.
+If we are adding these 2 spells:
+
+phantasmalbarrier
+raiseundead
+
+In autocvars.qh add things like this:
+float autocvar_g_start_spell_phantasmalbarrier;
+float autocvar_g_start_spell_team1_phantasmalbarrier;
+float autocvar_g_start_spell_team2_phantasmalbarrier;
+float autocvar_g_start_spell_team3_phantasmalbarrier;
+float autocvar_g_start_spell_team4_phantasmalbarrier;
+float autocvar_g_replace_weapon_pickups_scroll_phantasmalbarrier;
+
+float autocvar_g_start_spell_raiseundead;
+float autocvar_g_start_spell_team1_raiseundead;
+float autocvar_g_start_spell_team2_raiseundead;
+float autocvar_g_start_spell_team3_raiseundead;
+float autocvar_g_start_spell_team4_raiseundead;
+float autocvar_g_replace_weapon_pickups_scroll_raiseundead;
+
+
+Similar is done in t_items.qc
+and cheats.qc
+: searching for, say, "firewall" and then adding the needed
+lines for your new spells.
+(in cheats.qc the actual code for the spell is added aswell)
+(you'll know it when you get to it)
+
+(Later in the ../menu/ code the menus should be updated too (the magic ones)
+(Also the scroll .cfg s must be updated)

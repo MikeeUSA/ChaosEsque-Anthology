@@ -1,0 +1,4 @@
+.entity real_nade;
+.entity fake_nade;
+.float real_nade_refire;
+float g_nades;

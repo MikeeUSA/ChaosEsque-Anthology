@@ -1,0 +1,341 @@
+#ifdef REGISTER_WEAPON
+REGISTER_WEAPON(SKS45, w_sks45, IT_NAILS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "sks45", "sks45", _("SKS-45"))
+#else
+#ifdef SVQC
+
+.float sks45_release;
+.float sks45_jammed;
+.float sks45_unjam;
+.float sks45_unjam_time;
+.float sks45_click;
+.float sks45_animempty;
+.float sks45_animset;
+.float sks45_nextanim;
+.float sks45_nextbot;
+
+void W_Sks45_Attack (void)
+{
+	float	ammoamount;
+	float	d;
+	float	f;
+	float	spread;
+	float	bulletspeed;
+	float	bulletconstant;
+	entity flash;
+
+	ammoamount = autocvar_g_balance_sks45_primary_ammo;
+	d = autocvar_g_balance_sks45_primary_damage;
+	f = autocvar_g_balance_sks45_primary_force;
+	//spread = autocvar_g_balance_sks45_primary_spread;
+	spread = bound(autocvar_g_balance_sks45_spread_min, autocvar_g_balance_sks45_spread_min + (autocvar_g_balance_sks45_spread_add * self.misc_bulletcounter), autocvar_g_balance_sks45_spread_max);
+
+	//print(ftos(spread), " spread\n");
+
+	bulletspeed = autocvar_g_balance_sks45_primary_speed;
+	bulletconstant = autocvar_g_balance_projectile_ak47_bulletconstant;
+
+	W_DecreaseAmmo(ammo_nails, ammoamount, autocvar_g_balance_sks45_reload_ammo);
+	
+	if (autocvar_g_balance_sks45_jamrate &&
+ 	(autocvar_g_balance_sks45_jamrate > random() ))
+ 	{
+		if ((clienttype(self) == CLIENTTYPE_REAL)) {
+			sprint(self, "Your rifle jammed\n");
+		}
+		self.sks45_jammed = 1;
+	} else { //Start Not Jammed
+
+
+		W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/ffsl_sks_fire.wav", CH_WEAPON_A, d);
+	
+	W_MaybeShootFromEyeForAltAim(self); //shoot from the eye maybe if in alt aim so that shooting through windows works correctly when aiming
+	
+	fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, autocvar_g_balance_sks45_primary_headshotaddeddamage, f, WEP_SKS45, PROJECTILE_BULLETRIFLE30, 1, bulletconstant, autocvar_g_balance_sks45_primary_coreshotaddeddamage);
+	endFireBallisticBullet();
+	
+	//Note projectile changed to bulletrifle9mm from bulletrifle25
+
+	if (!g_norecoil)
+	{
+		if (self.misc_bulletcounter) {
+		//If we've been shooting full auto, shake things around
+		self.punchangle_x = random () - 0.5;
+		self.punchangle_y = random () - 0.5;
+		}
+	}
+	self.misc_bulletcounter = self.misc_bulletcounter + 1;
+
+		pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_sks45_primary_ammo);
+	
+		PlayerGunRise(self, autocvar_g_balance_sks45_gunrise, random() * autocvar_g_balance_sks45_gunrun);
+
+		// muzzle flash for 1st person view
+		flash = spawn();
+		setmodel(flash, "models/uziflash.md3"); // precision set below
+		flash.think = SUB_Remove;
+		flash.nextthink = time + 0.06;
+		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		W_AttachToShotorg(flash, '18 0 0');
+	
+	
+	if (autocvar_g_casings >= 2)
+		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * -100 - 120) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 124, self);
+
+	
+	} //End Not Jammed
+}
+
+
+float W_Sks45_NeedManualReload() {
+	if  (autocvar_g_manualreload && (autocvar_g_balance_sks45_reload_ammo && self.clip_load < autocvar_g_balance_sks45_primary_ammo))
+	{
+		if (!self.sks45_click && (self.BUTTON_ATCK)) {
+			spamsound (self, CH_SHOTS, "weapons/dryfire.wav", VOL_BASE * 0.25, ATTN_NORM);
+			self.sks45_click = 1;
+		}
+		else if not(self.BUTTON_ATCK)
+		{
+			self.sks45_click = 0;
+		}
+		return 1;
+	} else {
+		return 0;
+	}
+	
+}
+
+
+void spawnfunc_weapon_sks45 (void)
+{
+	weapon_defaultspawnfunc(WEP_SKS45);
+}
+
+
+.float sks45_primarytime;
+
+float w_sks45(float req)
+{
+	float ammo_amount;
+	if (req == WR_AIM) {
+		if (W_Sks45_NeedManualReload()) { weapon_action(self.weapon, WR_RELOAD); } // bot reload if automatic reload off
+
+		if (self.sks45_jammed) {
+			 weapon_action(self.weapon, WR_RELOAD);
+		}
+		
+		self.BUTTON_ATCK=FALSE;
+		self.BUTTON_ATCK2=FALSE;
+
+		if (self.sks45_release) {
+			if(autocvar_g_antilag_bullets)
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			else
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_sks45_primary_speed, 0, 0.001, FALSE);
+		}
+		
+	}
+	else if (req == WR_THINK && !W_Sks45_NeedManualReload())
+	{
+		if(autocvar_g_balance_sks45_reload_ammo && self.clip_load < autocvar_g_balance_sks45_primary_ammo) // forced reload
+		{
+			// don't force reload an empty sks45 if its melee attack is active
+			if not(autocvar_g_balance_sks45_secondary && self.ammo_nails < autocvar_g_balance_sks45_primary_ammo)
+				weapon_action(self.weapon, WR_RELOAD);
+				//self.sks45_release = 0;
+		}
+		else
+		{
+		  if (self.sks45_jammed && self.sks45_unjam)
+		  {
+		  	if (time >= self.sks45_unjam_time) {
+				self.sks45_jammed = 0;
+				self.sks45_unjam = 0;
+				if ((clienttype(self) == CLIENTTYPE_REAL)) {
+					sprint(self, "You cleared the jam\n");
+				}
+			}
+		  } else {
+			//float bp_skipme;
+			if (self.BUTTON_ATCK)
+			if (self.sks45_release)
+			if (self.sks45_jammed != 1)
+			if (weapon_prepareattack_check(0, 0))
+			{
+			
+				//Semiauto
+				if(clienttype(self) == CLIENTTYPE_BOT) {
+					//Nope
+					//print("I bot", ftos(self.sks45_nextbot)," \n");
+				} else {
+					self.sks45_nextbot = 0;
+				}
+				
+				if (time >= self.sks45_nextbot) {
+					W_Sks45_Attack();
+					ATTACK_FINISHED(self) = time + autocvar_g_balance_sks45_primary_refire * W_WeaponRateFactor();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_sks45_primary_animtime, w_ready);
+					self.sks45_release = 0;
+					self.sks45_animempty = 1;
+					self.sks45_animset = 1;
+					self.sks45_nextanim = time + autocvar_g_balance_sks45_primary_rfanim;
+					//bp_skipme = 1;
+					//self.sks45_nextbot = time + (autocvar_g_balance_sks45_primary_refire * 50 * random());
+					self.sks45_nextbot = time + 0.1 + (0.4 * random());
+				}
+			}
+			
+			if (self.BUTTON_ATCK2)
+			if (self.sks45_release)
+			if (self.sks45_jammed != 1)
+			if (weapon_prepareattack_check(0, 0))
+			{
+				spamsound (self, CH_SHOTS, "weapons/dryfire.wav", VOL_BASE * 0.20, ATTN_NORM);
+				self.sks45_release = 0;
+			}
+			
+			//if not(bp_skipme) {
+			//	if (self.sks45_jammed != 1)
+			//	if (time >= self.sks45_nextanim)
+			//	if (self.sks45_animempty)
+			//	{
+			//		self.sks45_animempty = 0;
+			//		self.sks45_animset = 1;
+			//	}
+			//}
+			
+			if not(self.BUTTON_ATCK || self.BUTTON_ATCK2) {
+				self.sks45_release = 1;
+			}
+			
+			if not(self.BUTTON_ATCK) {
+				//Not full auto, reset bullet counter
+				self.misc_bulletcounter = 0;
+			}
+				
+			//if (self.sks45_animset)
+			//if (self.sks45_jammed != 1) {
+			//	
+			//		if (self.sks45_animempty)
+			//			self.weaponname = "sks45_empty";
+			//		else
+			//			self.weaponname = "sks45";
+			//}
+			
+			//self.sks45_animset = 0;
+			//bp_skipme = 0;
+			////END NORMAL////
+		  }
+		}
+		
+	}
+	else if (req == WR_THINK)
+	{
+		  if (self.sks45_jammed && self.sks45_unjam)
+		  {
+		  	if (time >= self.sks45_unjam_time) {
+				self.sks45_jammed = 0;
+				self.sks45_unjam = 0;
+				if ((clienttype(self) == CLIENTTYPE_REAL)) {
+					sprint(self, "You cleared the malfunction\n");
+				}
+			}
+		  } 
+	}
+	else if (req == WR_PRECACHE)
+	{
+		precache_model ("models/uziflash.md3");
+		precache_model ("models/weapons/g_sks45.md3");
+		precache_model ("models/weapons/v_sks45.md3");
+		precache_model ("models/weapons/h_sks45.iqm");
+		
+		//precache_model ("models/weapons/v_sks45_empty.md3");
+		//precache_model ("models/weapons/h_sks45_empty.iqm");
+		precache_sound ("misc/itempickup.wav");
+		precache_sound ("weapons/ffsl_sks_fire.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+	}
+	else if (req == WR_SETUP)
+	{
+		self.weaponaltaim_use = 1;
+		self.weaponaltaim = '43 0.02 -2.0';
+		weapon_setup(WEP_SKS45);
+		self.current_ammo = ammo_nails;
+		
+		
+			//if (self.sks45_animempty)
+			//	self.weaponname = "sks45_empty";
+			//else
+			//	self.weaponname = "sks45";
+				
+	}
+	else if (req == WR_CHECKAMMO1)
+	{
+		ammo_amount = self.ammo_nails >= autocvar_g_balance_sks45_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_SKS45]) >= autocvar_g_balance_sks45_primary_ammo;
+		return ammo_amount;
+	}
+	else if (req == WR_CHECKAMMO2)
+	{
+		// melee attack is always available
+		return TRUE;
+	}
+	else if (req == WR_RELOAD)
+	{
+		if (self.sks45_jammed) {
+			weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_sks45_clearjam_time, w_ready);
+			if (self.sks45_unjam != 1) {
+				self.sks45_unjam = 1;
+				self.sks45_unjam_time = time + autocvar_g_balance_sks45_clearjam_time;
+				self.sks45_click = 0;
+				if ((clienttype(self) == CLIENTTYPE_REAL)) {
+					sprint(self, "You work on the weapon\n");
+				}
+			}
+		} else {
+			W_Reload(autocvar_g_balance_sks45_primary_ammo, autocvar_g_balance_sks45_reload_ammo, autocvar_g_balance_sks45_reload_time, "weapons/reload.wav");
+		}
+	}
+	return TRUE;
+}
+#endif
+#ifdef CSQC
+.float prevric;
+float w_sks45(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent && time - self.prevric > 0.25)
+		{
+			if(w_random < 0.0165)
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.033)
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.05)
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+			self.prevric = time;
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = _("%s is now thinking with portals");
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_CORESHOT)
+			w_deathtypestring = _("%1$s chest was made holes into by %2$s Samozaryadnyj Karabin sistemy Simonova");
+		else if(w_deathtype & HITTYPE_HEADSHOT)
+			w_deathtypestring = _("%1$s dead, %2$s shot them in head");
+		else
+			w_deathtypestring = _("%s removed was by %s's Samozaryadnyj Karabin sistemy Simonova");
+	}
+	return TRUE;
+}
+#endif
+#endif

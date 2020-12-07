@@ -1,0 +1,1 @@
+Audacity diminished pitch: -20, from pyria-skadi

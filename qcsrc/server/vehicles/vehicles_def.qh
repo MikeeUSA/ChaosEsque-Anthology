@@ -1,0 +1,168 @@
+// #define VEHICLES_USE_ODE
+#define VEHICLES_ENABLED
+#ifdef VEHICLES_ENABLED
+
+.float vehicle_flags;
+float VHF_ISVEHICLE     = 2;    /// Indicates vehicle
+float VHF_HASSHIELD     = 4;    /// Vehicle has shileding
+float VHF_SHIELDREGEN   = 8;    /// Vehicles shield regenerates
+float VHF_HEALTHREGEN   = 16;   /// Vehicles health regenerates
+float VHF_ENERGYREGEN   = 32;   /// Vehicles energy regenerates
+float VHF_DEATHEJECT    = 64;   /// Vehicle ejects pilot upon fatal damage
+float VHF_MOVE_GROUND   = 128;  /// Vehicle moves on gound
+float VHF_MOVE_HOVER    = 256;  /// Vehicle hover close to gound
+float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
+float VHF_DMGSHAKE      = 1024; /// Add random velocity each frame if health < 50%
+float VHF_DMGROLL       = 2048; /// Add random angles each frame if health < 50%
+float VHF_DMGHEADROLL   = 4096; /// Add random head angles each frame if health < 50%
+float VHF_MULTISLOT     = 8192; /// Vehicle has multiple player slots
+float VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a multi-person vehicle
+
+.entity gun1;
+.entity gun2;
+.entity gun3;
+.entity gun4;
+.entity gun5;
+.entity gun6;
+.entity gun7;
+.entity gun8;
+.entity gun9;
+.entity gun10;
+.entity gun11;
+.entity gun12;
+.entity gun13;
+.entity gun14;
+.entity gun0;
+.entity gun00;
+.entity gun000;
+.entity bomb1;
+.entity bomb2;
+.entity bomb3;
+.entity bomb4;
+.entity bomb5;
+.entity bomb6;
+.entity bomb7;
+.entity bomb8;
+.entity bomb9;
+.entity bomb10;
+.entity bomb11;
+.entity bomb12;
+.entity bomb13;
+.entity bomb14;
+.entity bomb15;
+.entity bomb16;
+.entity bomb17;
+.entity bomb18;
+.entity hitboxft;
+.entity hitboxbk;
+.entity hitboxmf;
+.entity hitboxmb;
+
+////For spinning rotor death areas.
+//front/back
+.entity rotorboxft;
+.entity rotorboxmf;
+.entity rotorboxmb;
+.entity rotorboxbk;
+
+//side to side
+.entity rotorboxftr;
+.entity rotorboxmfr;
+.entity rotorboxmbr;
+.entity rotorboxbkr;
+
+//diagnol 1
+.entity rotorboxftd1;
+.entity rotorboxmfd1;
+.entity rotorboxmbd1;
+.entity rotorboxbkd1;
+
+//diagnol 2
+.entity rotorboxftd2;
+.entity rotorboxmfd2;
+.entity rotorboxmbd2;
+.entity rotorboxbkd2;
+
+.vector rotoroffset;
+.float rotor_is;
+
+//tail rotor
+.entity rotorboxft_t;
+.entity rotorboxmf_t;
+.entity rotorboxmid_t;
+.entity rotorboxmb_t;
+.entity rotorboxbk_t;
+
+.entity vehicle_shieldent;  /// Entity to disply the shild effect on damage
+.entity vehicle;
+.entity vehicle_viewport;
+.entity vehicle_hudmodel;
+.entity vehicle_controller;
+.float vehicle_autocolor; /// If set, (shirt/pants) color applied on first entrance to vehicle
+.entity  vehicle_lastowner;
+.float vehicle_pounddownclass; //If set, determines how easy can knock down certain larger trees etc.
+
+.entity vehicle_pilotplaceholder;
+.float isvehiclepilotplaceholder;
+
+.entity gunner1;
+.entity gunner2;
+
+.float vehicle_norespawn; //If set, do not respawn
+.float vehicle_shieldtype; //If has physical shield (mountedguns)
+.float vehicle_tankresists; //If set, apply tank resistances.
+
+.float vehicle_health;      /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
+.float vehicle_energy;      /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
+.float vehicle_shield;      /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
+
+.float vehicle_ammo1;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo1 value.
+.float vehicle_reload1; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload1 value.
+.float vehicle_ammo2;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo2 value.
+.float vehicle_reload2; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload2 value.
+
+.float vehicle_ammo1_max;	//Max ammo in reload reserves
+.float vehicle_ammo1_current;	//Current ammo in reload reserves
+.float vehicle_ammo2_max;	//Max ammo in reload reserves
+.float vehicle_ammo2_current;	//Current ammo in reload reserves
+.float vehicle_zero;
+
+.float sound_nexttime;
+#define VOL_VEHICLEENGINE 1
+
+.float hud;
+.float dmg_time;
+.float  vehicle_respawntime;
+//.void() vehicle_spawn;
+
+void vehicles_exit(float eject);
+.void(float exit_flags) vehicle_exit;
+float VHEF_NORMAL = 0;  /// User pressed exit key
+float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
+float VHEF_RELESE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
+
+.float vehicle_playerisgunner;
+.entity vehicle_playergunnervehicle;	//ChaosEsque: Who is our vehicle
+.float(float selectgun) vehicle_changeseat; //ChaosEsque: what func to changeseat
+.float(float selectgun) vehicle_pilotchangeseat;
+
+float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05
+float SVC_SETVIEWANGLES = 10;  // Net.Protocol 0x0A
+float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
+
+.void() vehicle_enter;  /// Vehicles custom funciton to be executed when owner exit it
+.void() vehicle_die;    /// Vehicles custom function to be executed when vehile die
+#define VHSF_NORMAL 0
+#define VHSF_FACTORY 2
+.void(float _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
+.float(float _imp) vehicles_impusle;
+.float vehicle_weapon2mode = volly_counter;
+
+//§ .void() vehicle_factory()
+
+#ifdef VEHICLES_USE_ODE
+void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object
+void(entity e, vector force, vector force_pos) physics_addforce = #541; // apply a force from certain origin, length of force vector is power of force
+void(entity e, vector torque) physics_addtorque = #542; // add relative torque
+#endif  // VEHICLES_USE_ODE
+#endif  // VEHICLES_ENABLED

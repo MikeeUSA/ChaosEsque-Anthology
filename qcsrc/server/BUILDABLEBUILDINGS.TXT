@@ -1,0 +1,5 @@
+Files in question: w_multitool.qc w_utilitool.qc.
+
+Search for a string of a thing you want to make something similar. Note the number
+(ie == 646 bridge_wood.bsp). Search for that, see all the areas of the code in w_multitool.qc 
+references that number

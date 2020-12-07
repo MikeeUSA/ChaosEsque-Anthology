@@ -1,0 +1,48 @@
+//bot configuration: name	model	skin	shirt	pants	team	keyboard use	moving	dodging	ping	weapon use	aggressivity	range	aiming	calmhand	.mouse	fightthink	aithink
+//default team values (team-override): 1 = red, 2 = blue, 3 = yellow, 4 = pink										//use -1 for shirt-color or pants-color to get random colors												Hellfire	ignis	1	4	0	0	0	0	-0.5	-1	1	1	-0.5	-1	-1	2	0.5	-1
+Toxic	gakarmored	0	14	7	0	-1	-1.5	-0.5	0	1	0	0	0	2	-0.5	-0.5	1
+Discovery	erebus	1	2	6	0	0	-1	-0.5	-0.5	1	-0.5	0.5	1.5	-0.5	-1	1	0.5
+Pegasus	umbra	0	13	11	0	1	1	1	1	-1	0	0.5	0	-2	0	-1	0
+Eureka	umbra	0	12	7	0	0	0	-1.5	-0.5	-0.5	0	0	0	0	-0.5	1.5	1.5
+Airhead	ignis	1	11	1	0	-1	-1.5	-1	-0.5	1	1	-1	1	-0.5	1	0.5	0
+Gator	gak	0	3	10	0	0	1	0	0.5	-0.5	0.5	-0.5	-1	0	0	-0.5	0
+Delirium	gakmasked	0	8	12	0	0	-1	-1	-1	0	2	0	1	0	2	-1	-1
+Death	gakmasked	0	4	11	0	-0.5	0	0	1	-0.5	0	1	0	0	0	0	0
+Scorcher	ignishalfmasked	0	13	13	0	0	-1	0	-0.5	0.5	1	0	1	-2	1	0	0
+Firebeam	marine.zym	0	13	13	0	0	-1	0	-0.5	0.5	1	0	1	-2	1	0	0
+Necrotic	nyx	0	12	14	0	0	0	0	1	0	-1	-0.5	-1	1	0	0	0
+Dominator	nyx	0	3	9	0	0	0	0	2	-1	0	0	0	-1	0	0	0
+Thunderstorm	erebus	1	13	6	0	0	0	0	-0.5	-1	1	0.5	0.5	-0.5	0	0.5	0
+Mystery	pyria	0	9	14	0	1	1	1	1	-1	-1	0	1	1	-2	-1	-1
+Physon	insurrectionist.zym	0	9	14	0	1	1	1	1	-1	-1	0	1	1	-2	-1	-1
+Lion	ignismasked	0	0	4	0	1	1.5	2	-1	-1	-1	1	0	1	-0.5	-1	-1
+Sensible	seraphina	0	9	9	0	0	0	0.5	-1	0	-1	0	-1	2.5	-1.5	1	0.5
+Shadow	seraphinamasked	0	4	8	0	-0.5	2	1	0	0	-1	0	-1	0	1	-1	-0.5
+Resurrection	umbra	0	1	1	0	0	-0.5	-0.5	0	2	-1	-1	-1	0	-1	1	1
+StormHister	megaerebus	0	4	4	1	7	7	7	0	1	9.5	-2.5	7	2	2	2	2
+Desu	suiseiseki.zym	0	-1	-1	0	1	1	0	1	-1	-3	3	5	2	0	-1	-1
+Quark	crash.zym	0	6	5	0	5	1.5	-2	-1	0	-1	1	10	0	2	10	10
+Xel-6	grunt.zym	0	12	1	0	0	2	2	0	2	2	1	0.5	-1	1	-1	-1
+NR-5	grunt.zym	0	0	0	0	2	2	-2	0	-1	0	-1	2	1	-1	1	1
+QR-S	crash.zym	0	0	0	0	7	2	2	-1	2	-1	0	10	0	5	10	10
+QR-B	crash.zym	0	11	11	0	2	1	0	-1	0	2	1	10	0	0	10	10
+Reptile	lurk.zym	0	3	3	0	0	1	2	0.5	2	0.5	-0.5	1	0	0	2	2
+Lurk	lurk.zym	0	12	7	0	0	-1	-1	-1	0	2	0	1	0	2	-1	-1
+Velic	lurk.zym	0	7	2	0	0	0	0	-0.5	-1	1	0.5	0.5	-0.5	1	0.5	1
+Mulder	nexus.zym	1	4	0	0	7	7	7	0	1	2	-1	5	2	3	2	2
+Wolf	lycanthrope.zym	0	0	4	0	1	2	5	-1	-1	1	1	0	1	-0.5	-1	-1
+Zunab	headhunter.zym	0	9	9	0	0	0	0.5	-1	0	-1	0	-1	2.5	-1.5	1	0.5
+Smoke	erebus	1	0	0	0	5	5	5	0	1	5.5	-2.5	7	2	1	2	2
+Forest	erebus	1	7	7	0	5	5	5	0	1	5.5	-2.5	4	2	3	2	2
+Erebus	erebus	0	13	6	0	0	0	0	-0.5	-1	1	0.5	0.5	-0.5	0	0.5	0
+Ignis	ignis	0	4	0	0	0	0	-0.5	-1	1	1	-0.5	-1	-1	2	0.5	-1
+UBot	ubot	0	13	13	0	1	1	1	1	1	1	1	1	-2	0	-1	0
+XReT	ubot	0	0	0	0	7	2	2	-1	2	1	1	10	0	5	10	10
+SEAR	ubot	0	2	2	0	0	-1	0	-0.5	0.5	1	0	1	-2	1	0	0
+Ghost	specop.zym	0	4	8	0	-0.5	2	1	0	0	-1	0	-1	0	1	-1	-0.5
+Uk'Ert	visitant.zym	0	1	1	0	0	-0.5	-0.5	0	2	-1	-1	-1	0	-1	1	1
+ModTX1	terminusmale	0	5	6	0	1	0	0.5	-0.5	-1	1	0.5	1	0	0	0.5	0.5
+ModTR3	terminusfemale	0	3	14	0	1	0	0.5	-0.5	0	-1	0.5	1	0	0	0.5	0.5
+//name	model	skin	shirt	pants	team	keyb	moving	dodging	ping	wepuse	aggrs	range	aiming	cahnd	.mouse	fightthink	aithink
+//bot configuration: 
+//default team values (team-override): 1 = red, 2 = blue, 3 = yellow, 4 = pink										//use -1 for shirt-color or pants-color to get random colors

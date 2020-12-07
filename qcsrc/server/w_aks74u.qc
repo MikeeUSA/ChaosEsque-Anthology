@@ -1,0 +1,839 @@
+#ifdef REGISTER_WEAPON
+REGISTER_WEAPON(AKS74U, w_aks74u, IT_NAILS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "aks74u", "aks74u", _("AKS-74u"))
+#else
+#ifdef SVQC
+
+.float aks74u_release;
+.float aks74u_jammed;
+.float aks74u_unjam;
+.float aks74u_unjam_time;
+.float aks74u_click;
+.float aks74u_animempty;
+.float aks74u_animset;
+.float aks74u_nextanim;
+.float aks74u_nextbot;
+.float aks74u_setting; //0 full auto //1 semi
+.float aks74u_overheat_cnt;
+.float aks74u_overheated_until;
+.float aks74u_magazine; //0normal, 1 45rnd
+.float aks74u_magazine_changetime;
+.float aks74u_gsetmagazine; //For ground model setting propagation
+.float aks74u_pickedupgsetmagazine; //set if player pickedup a gsetmagazine pickup
+
+
+void W_Aks74u_Attack (void)
+{
+	float	ammoamount;
+	float	d;
+	float	f;
+	float	spread;
+	float	bulletspeed;
+	float	bulletconstant;
+	entity flash;
+
+	ammoamount = autocvar_g_balance_aks74u_primary_ammo;
+	d = autocvar_g_balance_aks74u_primary_damage;
+	f = autocvar_g_balance_aks74u_primary_force;
+
+	spread = bound(autocvar_g_balance_aks74u_spread_min, autocvar_g_balance_aks74u_spread_min + (autocvar_g_balance_aks74u_spread_add * self.misc_bulletcounter), autocvar_g_balance_aks74u_spread_max);
+
+	//print(ftos(spread), " spread\n");
+
+	bulletspeed = autocvar_g_balance_aks74u_primary_speed;
+	bulletconstant = autocvar_g_balance_aks74u_primary_bulletconstant;
+
+	W_DecreaseAmmo(ammo_nails, ammoamount, autocvar_g_balance_aks74u_reload_ammo);
+	
+	if (autocvar_g_balance_aks74u_jamrate &&
+ 	(autocvar_g_balance_aks74u_jamrate > random() ))
+ 	{
+		if ((clienttype(self) == CLIENTTYPE_REAL)) {
+			sprint(self, "Your assault rifle jammed\n");
+		}
+		self.aks74u_jammed = 1;
+	} else { //Start Not Jammed
+
+
+		W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/ffsl_ak47_fire.wav", CH_WEAPON_A, d);
+	
+	W_MaybeShootFromEyeForAltAim(self); //shoot from the eye maybe if in alt aim so that shooting through windows works correctly when aiming
+	
+	fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, autocvar_g_balance_aks74u_primary_headshotaddeddamage, f, WEP_AKS74U, PROJECTILE_BULLETRIFLE22, 1, bulletconstant, autocvar_g_balance_aks74u_primary_coreshotaddeddamage);
+	endFireBallisticBullet();
+
+	if (!g_norecoil)
+	{
+		if (self.misc_bulletcounter) {
+		//If we've been shooting full auto, shake things around
+		self.punchangle_x = random () - 0.5;
+		self.punchangle_y = random () - 0.5;
+		}
+	}
+	self.misc_bulletcounter = self.misc_bulletcounter + 1;
+
+		pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_aks74u_primary_ammo);
+	
+		PlayerGunRise(self, autocvar_g_balance_aks74u_gunrise, random() * autocvar_g_balance_aks74u_gunrun);
+
+		// muzzle flash for 1st person view
+		flash = spawn();
+		setmodel(flash, "models/uziflash.md3"); // precision set below
+		flash.think = SUB_Remove;
+		flash.nextthink = time + 0.06;
+		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		W_AttachToShotorg(flash, '-1 0 0');
+	
+	
+	if (autocvar_g_casings >= 2)
+		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * -100 - 120) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 123, self);
+
+
+	if not (autocvar_g_nosmallarmsoverheating) {
+	    	//Overheating//
+			//print(ftos(self.aks74u_overheat_cnt),"_Firing\n");
+		
+	    	self.aks74u_overheat_cnt = self.aks74u_overheat_cnt + autocvar_g_balance_aks74u_heatconstant;
+         
+	    	if (self.aks74u_overheat_cnt > random() )
+ 	    	{
+			if ((clienttype(self) == CLIENTTYPE_REAL)) {
+				sprint(self, "Your aks74u overheated\n");
+			}
+				
+			self.aks74u_overheated_until = time + (autocvar_g_balance_aks74u_cooldownwait * (self.aks74u_overheat_cnt + 1));
+	    	}
+	    	//Overheating//
+	}
+
+	
+	} //End Not Jammed
+}
+
+
+float W_Aks74u_NeedManualReload() {
+	if  (autocvar_g_manualreload && (autocvar_g_balance_aks74u_reload_ammo && self.clip_load < autocvar_g_balance_aks74u_primary_ammo))
+	{
+		if (!self.aks74u_click && (self.BUTTON_ATCK)) {
+			spamsound (self, CH_SHOTS, "weapons/dryfire.wav", VOL_BASE * 0.25, ATTN_NORM);
+			self.aks74u_click = 1;
+		}
+		else if not(self.BUTTON_ATCK)
+		{
+			self.aks74u_click = 0;
+		}
+		return 1;
+	} else {
+		return 0;
+	}
+	
+}
+
+
+float W_Aks74u_allowedextendedmags(entity player) {
+	local float stdmagfallback;
+	stdmagfallback = 0;
+				//if (player.aks74u_magazine == 2) {
+				//	if (!autocvar_g_balance_aks74u_exmag100notincluded
+			  	//	|| player.inv_misc_exmag_ak74_100)
+			  	//	{
+				//		return 1;
+				//	} else {
+				//		player.aks74u_magazine = 0; //fallback
+				//		stdmagfallback = 1;
+				//	}
+				//} else if (player.aks74u_magazine == 1.5) {
+				//	if (!autocvar_g_balance_aks74u_drum75notincluded
+			  	//	|| player.inv_misc_drum_aks74u_75)
+			  	//	{
+				//		return 1;
+				//	} else {
+				//		player.aks74u_magazine = 0; //fallback
+				//		stdmagfallback = 1;
+				//	}
+				//} else
+				if (player.aks74u_magazine == 1) {
+					if (!autocvar_g_balance_aks74u_exmag45notincluded
+			  		|| player.inv_misc_exmag_ak74_45)
+			  		{
+						return 1;
+					} else {
+						player.aks74u_magazine = 0; //fallback
+						stdmagfallback = 1;
+					}
+				} else if (player.aks74u_magazine == -1) {
+					return 1;
+				}
+				
+				if (player.aks74u_magazine == 0) {
+					if (!autocvar_g_balance_aks74u_mag30notincluded
+			  		|| player.inv_misc_mag_ak74_30)
+			  		{
+						if (!stdmagfallback) {
+							return 1;
+						}
+					} else {
+						player.aks74u_magazine = -1; //fallback
+					}
+				}
+				
+				return 0;
+}
+
+float W_Aks74u_refunddowntostdmag(entity player) {
+	if(player.clip_load > autocvar_g_balance_aks74u_reload_ammo) {
+		//print("refunding\n");
+		local float mygivebackammo;
+		mygivebackammo = player.clip_load - autocvar_g_balance_aks74u_reload_ammo;
+		player.clip_load = autocvar_g_balance_aks74u_reload_ammo;
+		player.ammo_nails = player.ammo_nails + mygivebackammo;
+					
+		return 1;
+	}
+				
+	return 0;
+}
+
+float W_Aks74u_refunddowntocustommag(entity player, float myreloadammo) {
+	if(player.clip_load > myreloadammo) {
+		//print("refunding\n");
+		local float mygivebackammo;
+		mygivebackammo = player.clip_load - myreloadammo;
+		player.clip_load = myreloadammo;
+		player.ammo_nails = player.ammo_nails + mygivebackammo;
+					
+		return 1;
+	}
+				
+	return 0;
+}
+
+void W_Aks74u_setmodelforanim(entity player) {
+	//if (player.aks74u_magazine == 2) {
+	//	if (player.aks74u_animempty)
+	//		player.weaponname = "aks74u_exm100_empty";
+	//	else
+	//		player.weaponname = "aks74u_exm100";
+	//} else if (player.aks74u_magazine == 1.5) {
+	//	if (player.aks74u_animempty)
+	//		player.weaponname = "aks74u_drum75_empty";
+	//	else
+	//		player.weaponname = "aks74u_drum75";
+	//} else
+	if (player.aks74u_magazine == 1) {
+		if (player.aks74u_animempty)
+			player.weaponname = "aks74u_exm45_empty";
+		else
+			player.weaponname = "aks74u_exm45";
+	} else if (player.aks74u_magazine == -1) {
+		if (player.aks74u_animempty)
+			player.weaponname = "aks74u_none_empty";
+		else
+			player.weaponname = "aks74u_none";
+	} else {
+		if (player.aks74u_animempty)
+			player.weaponname = "aks74u_empty";
+		else
+			player.weaponname = "aks74u";
+	}
+}
+
+void W_Aks74u_setclipsize(entity player) {
+	//if (player.aks74u_magazine == 2) {
+	//	player.clip_size = autocvar_g_balance_aks74u_reload_ammoexm2;
+	//} else if (player.aks74u_magazine == 1.5) {
+	//	player.clip_size = autocvar_g_balance_aks74u_reload_ammodrum;
+	//} else
+	if (player.aks74u_magazine == 1) {
+		player.clip_size = autocvar_g_balance_aks74u_reload_ammoexm;
+	} else if (player.aks74u_magazine == -1) {
+		player.clip_size = autocvar_g_balance_aks74u_reload_ammonone;
+	} else {
+		player.clip_size = autocvar_g_balance_aks74u_reload_ammo;
+	}
+}
+
+void W_Aks74u_setrefunddown(entity player) {
+	//if (player.aks74u_magazine == 2) {
+	//	W_Aks74u_refunddowntocustommag(player, autocvar_g_balance_aks74u_reload_ammoexm2);
+	//} else if (player.aks74u_magazine == 1.5) {
+	//	W_Aks74u_refunddowntocustommag(player, autocvar_g_balance_aks74u_reload_ammodrum);
+	//} else
+	if (player.aks74u_magazine == 1) {
+		W_Aks74u_refunddowntocustommag(player, autocvar_g_balance_aks74u_reload_ammoexm);
+	} else if (player.aks74u_magazine == -1) {
+		W_Aks74u_refunddowntocustommag(player, autocvar_g_balance_aks74u_reload_ammonone);
+	} else {
+		W_Aks74u_refunddowntocustommag(player, autocvar_g_balance_aks74u_reload_ammo);
+	}
+}
+
+float W_Aks74u_tryforvalidmag(entity player, float currentmagwant) {
+	if (!autocvar_g_balance_aks74u_mag30notincluded
+	|| player.inv_misc_mag_ak74_30)
+	{
+		return 0;
+	} else if (!autocvar_g_balance_aks74u_exmag45notincluded
+	|| player.inv_misc_exmag_ak74_45)
+	{
+		return 1;
+	}
+	//else if (!autocvar_g_balance_aks74u_drum75notincluded
+	//|| player.inv_misc_drum_aks74u_75)
+	//{
+	//	return 1.5;
+	//} else if (!autocvar_g_balance_aks74u_exmag100notincluded
+	//|| player.inv_misc_exmag_ak74_100)
+	//{
+	//	return 2;					
+	//}
+	
+	return currentmagwant;
+}
+
+
+
+void spawnfunc_weapon_aks74u (void)
+{
+	weapon_defaultspawnfunc(WEP_AKS74U);
+}
+
+
+void w_aks74u_changedroppedgroundmodel (entity myself, entity player)
+{
+	//Set the dropped weapon model to non-default if needed, and some attributes, used in: t_items.qc StartItem() 
+	//if (player.aks74u_magazine == 2) {
+	//	myself.model = "models/weapons/g_aks74u_exm100.md3";
+	//	
+	//	if (autocvar_g_balance_aks74u_exmag100notincluded
+	//	&& player.inv_misc_exmag_ak74_100 >= 1) {
+	//		player.inv_misc_exmag_ak74_100 = player.inv_misc_exmag_ak74_100 - 1;
+	//		myself.inv_misc_exmag_ak74_100 = myself.inv_misc_exmag_ak74_100 + 1;
+	//	}
+	//	
+	//	myself.aks74u_gsetmagazine = player.aks74u_magazine;
+	//} else if (player.aks74u_magazine == 1.5) {
+	//	myself.model = "models/weapons/g_aks74u_drum75.md3";
+	//	
+	//	if (autocvar_g_balance_aks74u_drum75notincluded
+	//	&& player.inv_misc_drum_aks74u_75 >= 1) {
+	//		player.inv_misc_drum_aks74u_75 = player.inv_misc_drum_aks74u_75 - 1;
+	//		myself.inv_misc_drum_aks74u_75 = myself.inv_misc_drum_aks74u_75 + 1;
+	//	}
+	//	
+	//	myself.aks74u_gsetmagazine = player.aks74u_magazine;
+	//} else
+	if (player.aks74u_magazine == 1) {
+		myself.model = "models/weapons/g_aks74u_exm45.md3";
+		
+		if (autocvar_g_balance_aks74u_exmag45notincluded
+		&& player.inv_misc_exmag_ak74_45 >= 1) {
+			player.inv_misc_exmag_ak74_45 = player.inv_misc_exmag_ak74_45 - 1;
+			myself.inv_misc_exmag_ak74_45 = myself.inv_misc_exmag_ak74_45 + 1;
+		}
+		myself.aks74u_gsetmagazine = player.aks74u_magazine;
+	} else if (player.aks74u_magazine == 0) {
+		//Standard
+		//////Allready set //myself.model = "models/weapons/g_aks74u.md3";
+		
+		if (autocvar_g_balance_aks74u_mag30notincluded
+		&& player.inv_misc_mag_ak74_30 >= 1) {
+			player.inv_misc_mag_ak74_30 = player.inv_misc_mag_ak74_30 - 1;
+			myself.inv_misc_mag_ak74_30 = myself.inv_misc_mag_ak74_30 + 1;
+		}
+		myself.aks74u_gsetmagazine = player.aks74u_magazine;
+	} else if (player.aks74u_magazine == -1) {
+		//No magazine
+		myself.model = "models/weapons/g_aks74u_none.md3";
+		
+		myself.aks74u_gsetmagazine = player.aks74u_magazine;
+	} else {
+		//Do nothing
+		myself.aks74u_gsetmagazine = 0;
+	}
+}
+
+void w_aks74u_setwhenpickedup (entity myself, entity player, float allreadyhaveweapon)
+{
+	//Propagate the magazine used setting
+	//Called in Item_Touch (void)
+	if (player.weapon != WEP_AKS74U) {
+		if (allreadyhaveweapon) {
+			//No settings change if we have the weapon
+		} else {
+			player.aks74u_magazine = myself.aks74u_gsetmagazine;
+			player.aks74u_pickedupgsetmagazine = myself.aks74u_gsetmagazine;
+		}
+	}
+}
+
+
+.float aks74u_primarytime;
+
+float w_aks74u(float req)
+{
+
+	if (!autocvar_g_nosmallarmsoverheating) {
+	//Overheating and cooldown stuff://
+		if (!self.BUTTON_ATCK) {
+				//For AK, only the primary trigger is relevant for overheating
+				//print(ftos(self.aks74u_overheat_cnt),"_Cooldown\n");
+			
+			if (self.aks74u_overheat_cnt < autocvar_g_balance_aks74u_heatmin) {
+				self.aks74u_overheat_cnt = autocvar_g_balance_aks74u_heatmin;
+			} else {
+				self.aks74u_overheat_cnt = self.aks74u_overheat_cnt - (autocvar_g_balance_aks74u_cooldownrate * sys_frametime);
+			}
+		}
+	//Overheating and cooldown stuff Done//
+	}
+
+
+	float ammo_amount;
+	if (req == WR_AIM) {
+		if (W_Aks74u_NeedManualReload()) { weapon_action(self.weapon, WR_RELOAD); } // bot reload if automatic reload off
+
+		if (self.aks74u_jammed) {
+			 weapon_action(self.weapon, WR_RELOAD);
+		}
+		
+		self.BUTTON_ATCK=FALSE;
+		self.BUTTON_ATCK2=FALSE;
+
+		if (self.aks74u_release) {
+			if(autocvar_g_antilag_bullets)
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			else
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_aks74u_primary_speed, 0, 0.001, FALSE);
+		}
+		
+	}
+	else if (req == WR_THINK && !W_Aks74u_NeedManualReload())
+	{
+		//Make sure we're allowed to have.
+		if (W_Aks74u_allowedextendedmags(self)) {
+			//Do nothing
+		} else {	
+			W_Aks74u_setclipsize(self);
+			W_Aks74u_setrefunddown(self);
+			W_Aks74u_setmodelforanim(self);
+		}
+		
+		if(autocvar_g_balance_aks74u_reload_ammo && self.clip_load < autocvar_g_balance_aks74u_primary_ammo) // forced reload
+		{
+			// don't force reload an empty aks74u if its melee attack is active
+			if not(autocvar_g_balance_aks74u_secondary && self.ammo_nails < autocvar_g_balance_aks74u_primary_ammo)
+				weapon_action(self.weapon, WR_RELOAD);
+				//self.aks74u_release = 0;
+		}
+		else
+		{
+		  if (self.aks74u_jammed && self.aks74u_unjam)
+		  {
+		  	if (time >= self.aks74u_unjam_time) {
+				self.aks74u_jammed = 0;
+				self.aks74u_unjam = 0;
+				if ((clienttype(self) == CLIENTTYPE_REAL)) {
+					sprint(self, "You cleared the jam\n");
+				}
+			}
+		  } else {
+			float bp_skipme;
+			if (self.BUTTON_ATCK)
+			if (self.aks74u_release)
+			if (self.aks74u_jammed != 1)
+			if ((time > self.aks74u_overheated_until) || autocvar_g_nosmallarmsoverheating)
+			if (weapon_prepareattack_check(0, 0))
+			{
+			  if (self.aks74u_setting != 1) {
+			  	//Fullauto
+				if(clienttype(self) == CLIENTTYPE_BOT) {
+					//Nope
+					//print("I bot", ftos(self.aks74u_nextbot)," \n");
+				} else {
+					self.aks74u_nextbot = 0;
+				}
+				
+				if (time >= self.aks74u_nextbot) {
+					W_Aks74u_Attack();
+					ATTACK_FINISHED(self) = time + autocvar_g_balance_aks74u_primary_refire * W_WeaponRateFactor();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_aks74u_primary_animtime, w_ready);
+					self.aks74u_release = 0;
+					self.aks74u_animempty = 1;
+					self.aks74u_animset = 1;
+					self.aks74u_nextanim = time + autocvar_g_balance_aks74u_primary_rfanim;
+					bp_skipme = 1;
+					//self.aks74u_nextbot = time + (autocvar_g_balance_aks74u_primary_refire * 50 * random());
+					self.aks74u_nextbot = time + 0.1 + (0.4 * random());
+					
+					//Fullauto:
+					self.aks74u_release = 1;
+					self.aks74u_nextbot = time;
+				}
+			   } else {
+				//Semiauto
+				if(clienttype(self) == CLIENTTYPE_BOT) {
+					//Nope
+					//print("I bot", ftos(self.aks74u_nextbot)," \n");
+				} else {
+					self.aks74u_nextbot = 0;
+				}
+				
+				if (time >= self.aks74u_nextbot) {
+					W_Aks74u_Attack();
+					ATTACK_FINISHED(self) = time + autocvar_g_balance_aks74u_secondary_refire * W_WeaponRateFactor();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_aks74u_secondary_animtime, w_ready);
+					self.aks74u_release = 0;
+					self.aks74u_animempty = 1;
+					self.aks74u_animset = 1;
+					self.aks74u_nextanim = time + autocvar_g_balance_aks74u_secondary_rfanim;
+					bp_skipme = 1;
+					//self.aks74u_nextbot = time + (autocvar_g_balance_aks74u_secondary_refire * 50 * random());
+					self.aks74u_nextbot = time + 0.1 + (0.4 * random());
+				}
+			   }
+			}
+			
+			if (self.BUTTON_ATCK2)
+			if (self.aks74u_release)
+			if (self.aks74u_jammed != 1)
+			if ((time > self.aks74u_overheated_until) || autocvar_g_nosmallarmsoverheating)
+			if (weapon_prepareattack_check(0, 0))
+			{
+				if(self.aks74u_setting) {
+					self.aks74u_setting = 0;
+				} else {
+					self.aks74u_setting = 1;
+				}
+				spamsound (self, CH_SHOTS, "weapons/dryfire.wav", VOL_BASE * 0.20, ATTN_NORM);
+				self.aks74u_release = 0;
+			}
+			
+			if not(bp_skipme) {
+				if (self.aks74u_jammed != 1)
+				if (time >= self.aks74u_nextanim)
+				if (self.aks74u_animempty)
+				{
+					self.aks74u_animempty = 0;
+					self.aks74u_animset = 1;
+				}
+			}
+			
+			if not(self.BUTTON_ATCK || self.BUTTON_ATCK2) {
+				self.aks74u_release = 1;
+			}
+			
+			if not(self.BUTTON_ATCK) {
+				//Not full auto, reset bullet counter
+				self.misc_bulletcounter = 0;
+			}
+				
+			if (self.aks74u_animset)
+			if (self.aks74u_jammed != 1) {
+				
+					W_Aks74u_setmodelforanim(self);
+			}
+			
+			self.aks74u_animset = 0;
+			bp_skipme = 0;
+			////END NORMAL////
+		  }
+		}
+		
+	}
+	else if (req == WR_THINK)
+	{
+		//Make sure we're allowed to have.
+		if (W_Aks74u_allowedextendedmags(self)) {
+			//Do nothing
+		} else {	
+			W_Aks74u_setclipsize(self);
+			W_Aks74u_setrefunddown(self);
+			W_Aks74u_setmodelforanim(self);
+		}
+		
+		
+		  if (self.aks74u_jammed && self.aks74u_unjam)
+		  {
+		  	if (time >= self.aks74u_unjam_time) {
+				self.aks74u_jammed = 0;
+				self.aks74u_unjam = 0;
+				if ((clienttype(self) == CLIENTTYPE_REAL)) {
+					sprint(self, "You cleared the malfunction\n");
+				}
+			}
+		  } 
+	
+	}
+	else if (req == WR_PRECACHE)
+	{
+		precache_model ("models/uziflash.md3");
+		precache_model ("models/weapons/g_aks74u.md3");
+		precache_model ("models/weapons/v_aks74u.md3");
+		precache_model ("models/weapons/h_aks74u.iqm");
+		
+		
+		precache_model ("models/weapons/g_aks74u_exm45.md3");
+		precache_model ("models/weapons/v_aks74u_exm45.md3");
+		precache_model ("models/weapons/h_aks74u_exm45.iqm");
+		precache_model ("models/weapons/v_aks74u_exm45_empty.md3");
+		precache_model ("models/weapons/h_aks74u_exm45_empty.iqm");
+		
+		precache_model ("models/weapons/g_aks74u_none.md3");
+		precache_model ("models/weapons/v_aks74u_none.md3");
+		precache_model ("models/weapons/h_aks74u_none.iqm");
+		precache_model ("models/weapons/v_aks74u_none_empty.md3");
+		precache_model ("models/weapons/h_aks74u_none_empty.iqm");
+		
+		
+		precache_model ("models/weapons/v_aks74u_empty.md3");
+		precache_model ("models/weapons/h_aks74u_empty.iqm");
+		precache_sound ("misc/itempickup.wav");
+		precache_sound ("weapons/ffsl_ak47_fire.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+	}
+	else if (req == WR_SETUP)
+	{
+		self.aks74u_overheat_cnt = autocvar_g_balance_aks74u_heatmin;
+		self.weaponaltaim_use = 1;
+		self.weaponaltaim = '43 0.02 -2.8';
+		weapon_setup(WEP_AKS74U);
+		self.current_ammo = ammo_nails;
+		
+			//Make sure we're allowed to have.
+			W_Aks74u_allowedextendedmags(self);
+			
+			if (self.aks74u_magazine == -1) {
+				//-1 is "no magazine". If we have a magazine... maybe use it
+				if (self.aks74u_pickedupgsetmagazine == -1) {
+					//If we picked up a weapon that had -1 set as it's magazine, accept
+				} else {
+					//Otherwise if we are starting with this weapon, see if we can have a valid magazine
+					//Example: standard 30 round mags not included, but you can use a different one that you have
+					//access to at spawn
+					self.aks74u_magazine = W_Aks74u_tryforvalidmag(self, self.aks74u_magazine);
+					W_Aks74u_allowedextendedmags(self);
+				}
+			}
+			
+			self.aks74u_pickedupgsetmagazine = 0; //Now that the pickup has propagated Reset
+			
+			//Set correct model		
+			W_Aks74u_setmodelforanim(self);
+				
+	}
+	else if (req == WR_CLIPSETUP)
+	{
+		W_Aks74u_setclipsize(self);
+		W_Aks74u_setrefunddown(self);
+	}
+	else if (req == WR_CHECKAMMO1)
+	{
+		ammo_amount = self.ammo_nails >= autocvar_g_balance_aks74u_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_AKS74U]) >= autocvar_g_balance_aks74u_primary_ammo;
+		return ammo_amount;
+	}
+	else if (req == WR_CHECKAMMO2)
+	{
+		// melee attack is always available
+		return TRUE;
+	}
+	else if (req == WR_RELOAD)
+	{
+		if (self.aks74u_jammed) {
+			weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_aks74u_clearjam_time, w_ready);
+			if (self.aks74u_unjam != 1) {
+				self.aks74u_unjam = 1;
+				self.aks74u_unjam_time = time + autocvar_g_balance_aks74u_clearjam_time;
+				self.aks74u_click = 0;
+				if ((clienttype(self) == CLIENTTYPE_REAL)) {
+					sprint(self, "You work on the weapon\n");
+				}
+			}
+		} else {
+			local float aks74udonothing;
+			aks74udonothing = 0;
+			if (self.BUTTON_USE) {
+			  if (self.aks74u_magazine_changetime >= time) {
+			  	//Do nothing
+				aks74udonothing = 1;
+			  } else {
+				local float aks74umagwant;
+				if (self.aks74u_magazine == 1) {
+					aks74umagwant = 0;
+					//////aks74umagwant = 1.5;
+				//} else if (self.aks74u_magazine == 1.5) {
+				//	aks74umagwant = 2;	
+				//} else if (self.aks74u_magazine == 2) {
+				//	aks74umagwant = 0;	
+				} else {
+					//self.aks74u_magazine == 0
+					aks74umagwant = 1;
+				}				
+				
+				if (aks74umagwant == 1) {
+					if (!autocvar_g_balance_aks74u_exmag45notincluded
+			  		|| self.inv_misc_exmag_ak74_45)
+			  		{
+						//Yes
+					} else {
+						//No
+						//	aks74umagwant = 1.5; //fallback
+						aks74umagwant = 0; //fallback
+					}
+				}				
+				
+				//if (aks74umagwant == 1.5) {
+				//	if (!autocvar_g_balance_aks74u_drum75notincluded
+			  	//	|| self.inv_misc_drum_aks74u_75)
+			  	//	{
+				//		//Yes
+				//	} else {
+				//		//No
+				//			aks74umagwant = 2; //fallback
+				//	}
+				//}
+				
+				//if (aks74umagwant == 2) {
+				//	if (!autocvar_g_balance_aks74u_exmag100notincluded
+			  	//	|| self.inv_misc_exmag_ak74_100)
+			  	//	{
+				//		//Yes
+				//	} else {
+				//		//No
+				//			aks74umagwant = 0; //fallback
+				//	}
+				//}
+				
+				//If no magazines available...
+				if (aks74umagwant == 0) {
+					if (!autocvar_g_balance_aks74u_mag30notincluded
+			  		|| self.inv_misc_mag_ak74_30)
+			  		{
+						//Yes
+					} else {
+						//No
+							aks74umagwant = -1; //fallback
+					}
+				}
+				
+				//If no mag, Try for valid magazine instead if have
+				if (aks74umagwant == -1) {
+					aks74umagwant = W_Aks74u_tryforvalidmag(self, aks74umagwant);
+				}
+				//Final decisions
+				
+				if (aks74umagwant == self.aks74u_magazine) {
+					aks74udonothing = 1;
+				//} else if (aks74umagwant == 2) {
+				//	self.aks74u_magazine = 2;
+				//} else if (aks74umagwant == 1.5) {
+				//	self.aks74u_magazine = 1.5;
+				} else if (aks74umagwant == 1) {
+					self.aks74u_magazine = 1;
+				} else if (aks74umagwant == 0) {
+					self.aks74u_magazine = 0;
+				} else if (aks74umagwant == -1) {
+					self.aks74u_magazine = -1;
+				}
+				
+				W_Aks74u_setmodelforanim(self);
+			  }
+			}
+		
+			if (aks74udonothing) {
+				//print(ftos(time),"Doing nothing\n");
+			//} else if (self.aks74u_magazine == 2) {
+			//	W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammoexm2, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+			//	
+			//	W_Aks74u_refunddowntocustommag(self, autocvar_g_balance_aks74u_reload_ammoexm2);
+			//	//Normally no refund here since selection goes up
+			//
+			//	W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammoexm2, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+			//	W_Aks74u_setclipsize(self);
+			//	self.aks74u_magazine_changetime = time + self.reload_time;
+			//} else if (self.aks74u_magazine == 1.5) {
+			//	W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammodrum, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+			//	
+			//	W_Aks74u_refunddowntocustommag(self, autocvar_g_balance_aks74u_reload_ammodrum);
+			//	//Normally no refund here since selection goes up
+			//	
+			//	W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammodrum, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+			//	W_Aks74u_setclipsize(self);
+			//	self.aks74u_magazine_changetime = time + self.reload_time;
+			} else if (self.aks74u_magazine == 1) {
+				W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammoexm, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+				
+				W_Aks74u_refunddowntocustommag(self, autocvar_g_balance_aks74u_reload_ammoexm);
+				//Normally no refund here since selection goes up
+				
+				W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammoexm, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+				W_Aks74u_setclipsize(self);
+				self.aks74u_magazine_changetime = time + self.reload_time;
+			} else if (self.aks74u_magazine == -1) {
+				W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammonone, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+				
+				//print(ftos(self.clip_load),"clipload\n");
+				//print(ftos(self.reload_ammo_amount),"reload_ammo_amount\n");
+				
+				W_Aks74u_refunddowntocustommag(self, autocvar_g_balance_aks74u_reload_ammonone);
+				
+				W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammonone, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+				W_Aks74u_setclipsize(self);
+				self.aks74u_magazine_changetime = time + self.reload_time;
+			} else {
+				W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammo, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+				
+				//print(ftos(self.clip_load),"clipload\n");
+				//print(ftos(self.reload_ammo_amount),"reload_ammo_amount\n");
+				W_Aks74u_refunddowntostdmag(self);
+				
+				W_Reload(autocvar_g_balance_aks74u_primary_ammo, autocvar_g_balance_aks74u_reload_ammo, autocvar_g_balance_aks74u_reload_time, "weapons/reload.wav");
+				W_Aks74u_setclipsize(self);
+				self.aks74u_magazine_changetime = time + self.reload_time;
+			}
+		}
+	}
+	return TRUE;
+}
+#endif
+#ifdef CSQC
+.float prevric;
+float w_aks74u(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent && time - self.prevric > 0.25)
+		{
+			if(w_random < 0.0165)
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.033)
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.05)
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+			self.prevric = time;
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = _("%s is now thinking with portals");
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_CORESHOT)
+			w_deathtypestring = _("%1$s chest made holes by %2$s AKS-74u");
+		else if(w_deathtype & HITTYPE_HEADSHOT)
+			w_deathtypestring = _("%1$s died by wound to head, %2$s AKS-74u approve");
+		else
+			w_deathtypestring = _("%s killed, thank %s's AKS-74u");
+	}
+	return TRUE;
+}
+#endif
+#endif

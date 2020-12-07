@@ -1,0 +1,327 @@
+#ifdef REGISTER_WEAPON
+REGISTER_WEAPON(SPAS12, w_spas12, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "spas12", "spas12", _("SPAS-12"))
+#else
+#ifdef SVQC
+
+.float spas12_release;
+.float spas12_jammed;
+.float spas12_unjam;
+.float spas12_unjam_time;
+.float spas12_click;
+.float spas12_altchoke;
+.float spas12_nextbot;
+
+void W_Spas12_Attack (void)
+{
+	float	sc;
+	float	ammoamount;
+	float	bullets;
+	float	d;
+	float	f;
+	float	spread;
+	float	bulletspeed;
+	float	bulletconstant;
+	entity flash;
+
+	ammoamount = autocvar_g_balance_spas12_primary_ammo;
+	bullets = autocvar_g_balance_spas12_primary_bullets;
+	d = autocvar_g_balance_spas12_primary_damage;
+	f = autocvar_g_balance_spas12_primary_force;
+	
+	if (self.spas12_altchoke == 1) {
+		spread = autocvar_g_balance_spas12_primary_spreadalt;
+	} else if (self.spas12_altchoke == 2) {
+		spread = autocvar_g_balance_spas12_primary_spreadalt2;
+	} else {
+		spread = autocvar_g_balance_spas12_primary_spread;
+	}
+	bulletspeed = autocvar_g_balance_spas12_primary_speed;
+	bulletconstant = autocvar_g_balance_projectile_shotgunshot_bulletconstant;
+
+	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_spas12_reload_ammo);
+
+	if (autocvar_g_balance_spas12_jamrate &&
+ 	(autocvar_g_balance_spas12_jamrate > random() ))
+ 	{
+		if ((clienttype(self) == CLIENTTYPE_REAL)) {
+			sprint(self, "Your shotgun jammed\n");
+		}
+		self.spas12_jammed = 1;
+	} else { //Start Not Jammed
+
+	
+		W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets);
+		
+		W_MaybeShootFromEyeForAltAim(self); //shoot from the eye maybe if in alt aim so that shooting through windows works correctly when aiming
+
+		for (sc = 0;sc < bullets;sc = sc + 1)
+			fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SPAS12, PROJECTILE_BULLETSHOTGUN, 1, bulletconstant, autocvar_g_balance_spas12_primary_coreshotaddeddamage);
+		endFireBallisticBullet();
+	
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg + (v_forward * 50), w_shotdir * 1000, autocvar_g_balance_spas12_primary_ammo);
+	
+	PlayerGunRise(self, autocvar_g_balance_spas12_gunrise, random() * autocvar_g_balance_spas12_gunrun);
+
+	// casing code
+	if (autocvar_g_casings >= 1) {
+		//for (sc = 0;sc < ammoamount;sc = sc + 1)
+			SpawnCasing (((random () * 100 + 100) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 60 - 50) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
+	}
+	
+	// muzzle flash for 1st person view
+	flash = spawn();
+	setmodel(flash, "models/uziflash.md3"); // precision set below
+	flash.think = SUB_Remove;
+	flash.nextthink = time + 0.06;
+	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	W_AttachToShotorg(flash, '36 0 0');
+	
+	} //End Not Jammed
+}
+
+
+float W_Spas12_NeedManualReload() {
+	if  (autocvar_g_manualreload && (autocvar_g_balance_spas12_reload_ammo && self.clip_load < autocvar_g_balance_spas12_primary_ammo))
+	{
+		if (!self.spas12_click && (self.BUTTON_ATCK)) {
+			spamsound (self, CH_SHOTS, "weapons/dryfire.wav", VOL_BASE * 0.25, ATTN_NORM);
+			self.spas12_click = 1;
+		}
+		else if not(self.BUTTON_ATCK)
+		{
+			self.spas12_click = 0;
+		}
+		return 1;
+	} else {
+		return 0;
+	}
+	
+}
+
+
+void spawnfunc_weapon_spas12 (void)
+{
+	weapon_defaultspawnfunc(WEP_SPAS12);
+}
+
+
+.float spas12_primarytime;
+
+float w_spas12(float req)
+{
+	float ammo_amount;
+	if (req == WR_AIM) {
+		if (W_Spas12_NeedManualReload()) { weapon_action(self.weapon, WR_RELOAD); } // bot reload if automatic reload off
+
+		if (self.spas12_jammed) {
+			 weapon_action(self.weapon, WR_RELOAD);
+		}
+		
+		self.BUTTON_ATCK=FALSE;
+		self.BUTTON_ATCK2=FALSE;
+		
+		if (time >= self.spas12_nextbot) {
+			if(autocvar_g_antilag_bullets)
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			else
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_spas12_primary_speed, 0, 0.001, FALSE);
+		}
+		
+	}
+	else if (req == WR_THINK && !W_Spas12_NeedManualReload())
+	{
+		if(autocvar_g_balance_spas12_reload_ammo && self.clip_load < autocvar_g_balance_spas12_primary_ammo) // forced reload
+		{
+			// don't force reload an empty spas12 if its melee attack is active
+			if not(autocvar_g_balance_spas12_secondary && self.ammo_shells < autocvar_g_balance_spas12_primary_ammo)
+				weapon_action(self.weapon, WR_RELOAD);
+				self.spas12_release = 0;
+		}
+		else
+		{
+		  if (self.spas12_jammed && self.spas12_unjam)
+		  {
+		  	if (time >= self.spas12_unjam_time) {
+				self.spas12_jammed = 0;
+				self.spas12_unjam = 0;
+				if ((clienttype(self) == CLIENTTYPE_REAL)) {
+					sprint(self, "You cleared the jam\n");
+				}
+			}
+		  } else {
+		  	
+			if not(self.BUTTON_ATCK) {
+				self.spas12_release = 1;
+				self.spas12_click = 0;
+			} else if (
+			(self.BUTTON_ATCK) &&
+			(self.spas12_jammed != 1) &&
+			(self.spas12_release))
+			{
+				if (time >= self.spas12_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+				{
+						if(clienttype(self) == CLIENTTYPE_BOT) {
+							//Nope
+							//print("I bot", ftos(self.spas12_nextbot)," \n");
+						} else {
+							self.spas12_nextbot = 0;
+						}
+				
+						if(weapon_prepareattack(0, autocvar_g_balance_spas12_primary_animtime))
+						{
+						  if (time >= self.spas12_nextbot) {
+							W_Spas12_Attack();
+							self.spas12_primarytime = time + autocvar_g_balance_spas12_primary_refire * W_WeaponRateFactor();
+							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_spas12_primary_animtime, w_ready);
+							self.spas12_release = 0;
+							self.spas12_nextbot = time + 0.1 + (0.4 * random());
+						  }
+						}
+				}
+			} else if (self.BUTTON_ATCK && !self.shotgun_click && self.shotgun_release && W_shotgun_NeedManualReload()) {
+				spamsound (self, CH_SHOTS, "weapons/dryfire.wav", VOL_BASE * 0.25, ATTN_NORM);
+				self.spas12_click = 1;
+			}
+			////END NORMAL////
+		  }
+		}
+		
+	}
+	else if (req == WR_PRECACHE)
+	{
+		precache_model ("models/uziflash.md3");
+		precache_model ("models/weapons/g_spas12.md3");
+		precache_model ("models/weapons/v_spas12.md3");
+		precache_model ("models/weapons/h_spas12.iqm");
+		precache_sound ("misc/itempickup.wav");
+		precache_sound ("weapons/shotgun_fire.wav");
+		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+	}
+	else if (req == WR_SETUP)
+	{
+		self.weaponaltaim_use = 1;
+		//self.weaponaltaim = '40 0.05 -1.25';
+		self.weaponaltaim = '40 0.05 -2.00';
+		weapon_setup(WEP_SPAS12);
+		self.current_ammo = ammo_shells;
+	}
+	else if (req == WR_CHECKAMMO1)
+	{
+		ammo_amount = self.ammo_shells >= autocvar_g_balance_spas12_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_SPAS12]) >= autocvar_g_balance_spas12_primary_ammo;
+		return ammo_amount;
+	}
+	else if (req == WR_CHECKAMMO2)
+	{
+		// melee attack is always available
+		return TRUE;
+	}
+	else if (req == WR_RELOAD)
+	{
+		if (self.spas12_jammed) {
+			weapon_thinkf(WFRAME_RELOAD, autocvar_g_balance_spas12_clearjam_time, w_ready);
+			if (self.spas12_unjam != 1) {
+				self.spas12_unjam = 1;
+				self.spas12_unjam_time = time + autocvar_g_balance_spas12_clearjam_time;
+				self.spas12_click = 0;
+				if ((clienttype(self.owner) == CLIENTTYPE_REAL)) {
+					sprint(self.owner, "You work on the shotgun\n");
+				}
+			}
+		} else {
+			//print(ftos(self.(weapon_load[self.weapon])   ), " swl\n");
+			//print(ftos(self.clip_load) , " cl\n");
+
+			if ((self.clip_load > 0) && (self.clip_load < autocvar_g_balance_spas12_reload_ammo)) {
+				//Tube Magazine not empty Less than full reload time needed
+				W_Reload(autocvar_g_balance_spas12_primary_ammo, autocvar_g_balance_spas12_reload_ammo, autocvar_g_balance_spas12_reload_time - (autocvar_g_balance_spas12_reload_time * (self.clip_load/autocvar_g_balance_spas12_reload_ammo)), "weapons/reload.wav");
+			} else {
+				//Empty or abnormal, do simple full reload time
+				W_Reload(autocvar_g_balance_spas12_primary_ammo, autocvar_g_balance_spas12_reload_ammo, autocvar_g_balance_spas12_reload_time, "weapons/reload.wav");
+			}
+			
+			if (self.BUTTON_USE) {
+				
+				if (self.spas12_altchoke == 2) {
+					if(self.BUTTON_CROUCH) {
+						self.spas12_altchoke = 1;
+						if ((clienttype(self) == CLIENTTYPE_REAL)) {
+							sprint(self, "You change to an open choke on your spas12\n");
+						}
+					} else {
+						self.spas12_altchoke = 0;
+						if ((clienttype(self) == CLIENTTYPE_REAL)) {
+							sprint(self, "You change to a tight choke on your spas12\n");
+						}
+					}
+				} else if (self.spas12_altchoke == 1) {
+					if(self.BUTTON_CROUCH) {
+						self.spas12_altchoke = 0;
+						if ((clienttype(self) == CLIENTTYPE_REAL)) {
+							sprint(self, "You change to a tight choke on your spas12\n");
+						}
+					} else {
+						self.spas12_altchoke = 2;
+						if ((clienttype(self) == CLIENTTYPE_REAL)) {
+							sprint(self, "You change to a restrictive choke on your spas12\n");
+						}
+					}
+				} else if (!self.spas12_altchoke) {
+					if(self.BUTTON_CROUCH) {
+						self.spas12_altchoke = 2;
+						if ((clienttype(self) == CLIENTTYPE_REAL)) {
+							sprint(self, "You change to a restrictive choke on your spas12\n");
+						}
+					} else {
+						self.spas12_altchoke = 1;
+						if ((clienttype(self) == CLIENTTYPE_REAL)) {
+							sprint(self, "You change to an open choke on your spas12\n");
+						}
+					}
+				}
+			}
+		}
+		self.spas12_release = 0;
+	}
+	return TRUE;
+}
+#endif
+#ifdef CSQC
+.float prevric;
+float w_spas12(float req)
+{
+	if(req == WR_IMPACTEFFECT)
+	{
+		vector org2;
+		org2 = w_org + w_backoff * 2;
+		pointparticles(particleeffectnum("shotgun_impact"), org2, w_backoff * 1000, 1);
+		if(!w_issilent && time - self.prevric > 0.25)
+		{
+			if(w_random < 0.0165)
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.033)
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+			else if(w_random < 0.05)
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+			self.prevric = time;
+		}
+	}
+	else if(req == WR_PRECACHE)
+	{
+		precache_sound("weapons/ric1.wav");
+		precache_sound("weapons/ric2.wav");
+		precache_sound("weapons/ric3.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = _("%s is now thinking with portals");
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_CORESHOT)
+			w_deathtypestring = _("%1$s failed in argument to %2$s 12 gauge autoloader");
+		else
+			w_deathtypestring = _("%s was gunned down via %s's SPAS-12");
+	}
+	return TRUE;
+}
+#endif
+#endif

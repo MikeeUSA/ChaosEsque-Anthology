@@ -1,0 +1,89 @@
+Lightning gun is good enough, wanted to see if could get the polygon stuff.
+
+float autocvar_g_balance_arc_beam_ammo; 
+float autocvar_g_balance_arc_beam_animtime; 
+float autocvar_g_balance_arc_beam_botaimspeed; 
+float autocvar_g_balance_arc_beam_botaimlifetime; 
+float autocvar_g_balance_arc_beam_damage; 
+float autocvar_g_balance_arc_beam_degreespersegment; 
+float autocvar_g_balance_arc_beam_distancepersegment; 
+float autocvar_g_balance_arc_beam_falloff_halflifedist; 
+float autocvar_g_balance_arc_beam_falloff_maxdist; 
+float autocvar_g_balance_arc_beam_falloff_mindist; 
+float autocvar_g_balance_arc_beam_force; 
+float autocvar_g_balance_arc_beam_healing_amax; 
+float autocvar_g_balance_arc_beam_healing_aps; 
+float autocvar_g_balance_arc_beam_healing_hmax; 
+float autocvar_g_balance_arc_beam_healing_hps; 
+float autocvar_g_balance_arc_beam_maxangle; 
+float autocvar_g_balance_arc_beam_nonplayerdamage; 
+float autocvar_g_balance_arc_beam_range; 
+float autocvar_g_balance_arc_beam_refire; 
+float autocvar_g_balance_arc_beam_returnspeed; 
+float autocvar_g_balance_arc_beam_tightness; 
+float autocvar_g_balance_arc_burst_ammo; 
+float autocvar_g_balance_arc_burst_damage; 
+float autocvar_g_balance_arc_burst_healing_aps; 
+float autocvar_g_balance_arc_burst_healing_hps; 
+float autocvar_g_balance_arc_overheat_max; // /* maximum heat before jamming */ \
+float autocvar_g_balance_arc_overheat_min; // /* minimum heat to wait for cooldown */ \
+float autocvar_g_balance_arc_beam_heat;   // /* heat increase per second (primary) */ \
+float autocvar_g_balance_arc_burst_heat;  // /* heat increase per second (secondary) */ \
+float autocvar_g_balance_arc_cooldown;
+
+
+
+// {{{ #20: Arc
+set g_balance_arc_beam_ammo 4
+set g_balance_arc_beam_animtime 0.2
+set g_balance_arc_beam_botaimlifetime 0
+set g_balance_arc_beam_botaimspeed 0
+set g_balance_arc_beam_damage 115
+set g_balance_arc_beam_degreespersegment 1
+set g_balance_arc_beam_distancepersegment 0
+set g_balance_arc_beam_falloff_halflifedist 0
+set g_balance_arc_beam_falloff_maxdist 0
+set g_balance_arc_beam_falloff_mindist 0
+set g_balance_arc_beam_force 900
+set g_balance_arc_beam_healing_amax 100
+set g_balance_arc_beam_healing_aps 50
+set g_balance_arc_beam_healing_hmax 150
+set g_balance_arc_beam_healing_hps 50
+set g_balance_arc_cooldown 2.5
+set g_balance_arc_overheat_max 5
+set g_balance_arc_overheat_min 3
+set g_balance_arc_beam_heat 1
+set g_balance_arc_burst_heat 4
+set g_balance_arc_beam_maxangle 10
+set g_balance_arc_beam_nonplayerdamage 80
+set g_balance_arc_beam_range 1000
+set g_balance_arc_beam_refire 0.5
+set g_balance_arc_beam_returnspeed 8
+set g_balance_arc_beam_tightness 0.5
+set g_balance_arc_burst_ammo 15
+set g_balance_arc_burst_damage 250
+set g_balance_arc_burst_healing_aps 100
+set g_balance_arc_burst_healing_hps 100
+set g_balance_arc_reload_ammo 0
+
+seta crosshair_arc "" "crosshair to display when wielding the caltrop"
+seta crosshair_arc_color "0 0 1"      "crosshair color to display when wielding the caltrop"
+seta crosshair_arc_alpha 1    "crosshair alpha value to display when wielding caltrop"
+seta crosshair_arc_size 0.35   "crosshair size when wielding the caltrop"
+
+
+
+for View.qc
+#define FL2VEC(x,y,z) (('1 0 0' * x) + ('0 1 0' * y) + ('0 0 1' * z))
+
+
+
+
+For Main.qc:
+//case ENT_CLIENT_ARC_BEAM: Ent_ReadArcBeam(bIsNewEntity); break;
+
+
+csqc model settings
+
+// new fields
+.vector v_angle;

@@ -1,0 +1,551 @@
+**Core Team
+
+Rudolf "divVerent" Polzer
+Tyler "-z-" Mulligan
+Merlijn Hofstra
+morphed
+Samual "Ares" Lenks
+Saulo "mand1nga" Gil
+Jakob "tZork" Markström Gröhn
+
+**Coordinators
+
+*Art
+Sahil "DiaboliK" Singhal
+
+*2D Art / Web
+Tyler "-z-" Mulligan (web / game)
+FruitieX (game / web)
+
+*3D Art
+morphed
+LJFHutch
+
+*Concept Art
+LJFHutch
+Pearce "theShadow" Michal
+
+*Animation
+Sahil "DiaboliK" Singhal
+nifrek
+
+*Level Design
+FruitieX
+MirceaKitsune
+Jakob "tZork" Markström Gröhn
+Ruszkai "C.Brutail" Ákos
+
+*Music / Sound FX
+mand1nga
+Merlijn Hofstra
+remaxim
+Stephan
+Independent.nu
+
+*Engine Code Additions & QA
+Rudolf "divVerent" Polzer
+
+*Game Code
+Rudolf "divVerent" Polzer
+FruitieX
+Jakob "tZork" Markström Gröhn
+
+*Marketing / PR
+Tyler "-z-" Mulligan
+mand1nga
+Ruszkai "C.Brutail" Ákos
+
+*Legal
+Rudolf "divVerent" Polzer
+Merlijn Hofstra
+
+**Game Engine
+DarkPlaces
+by Forest "LordHavoc" Hale
+
+**Translators
+
+*Dutch
+Alexander "freefang" van Dam
+PinkRobot
+
+*German
+Rudolf "divVerent" Polzer
+
+*Finnish
+Henry "Exitium" Sanmark
+
+*French
+Calinou
+Maxime "Taximus" Paradis
+
+*Greek
+Γιάννης Α.
+
+*Hungarian
+xaN1C4n3
+Ruszkai "C.Brutail" Ákos
+
+*Italian
+Antonio "terencehill" Piu
+Felice "MaidenBeast" Sallustio
+
+*Portuguese
+Ricardo "Hellgardia" Silva
+
+*Romanian
+MirceaKitsune
+
+*Russian
+Lord Canistra
+Nikoli
+Sergej "Clearness High" Lutsyk
+
+*Spanish
+Rodrigo Mouton Laudin
+
+*Swedish
+marcus256
+
+*Ukrainian
+Vasyl "Harmata" Melnyk
+
+**Other Active Contributors
+Akari
+Ant "Antibody" Zucaro
+Antonio "terencehill" Piu
+atheros
+Ben "MooKow" Banker
+blkrbt
+Calinou
+chooksta
+cortez
+Cuinn "Cuinnton" Herrick
+Florian Paul "lda17h" Schmidt
+Jope “Sless” Withers
+kojn
+Kristian "morfar" Johansson
+kuniuthefrogg
+magorian
+Maik "SavageX" Merten
+Marvin "Mirio" Beck
+Mepper
+Mick Rippon
+MrBougo
+nowego
+parasti
+Paul Scott
+PlasmaSheep
+Przemysław "atheros" Grzywacz
+{SC0RP} - Ian "ID" Dorrell
+Severin "sev" Meyer
+SoulKeeper_p
+Stephan "esteel" Stahl
+The player with the unnecessarily long name
+Wolfgang "Blub\0" Bumiller
+Erik "Ablu" Schilling
+BlaXpirit
+**Past Contributors
+Alexander "motorsep" Zubov
+Amos "torus" Dudley
+Andreas "Black" Kirsch
+Attila "WW3" Houtkooper
+BigMac
+Braden "meoblast001" Walters
+Brain Younds
+Chris "amethyst7" Matz
+Christian Ice
+Clinton "Kaziganthe" Freeman
+Dan "Digger" Korostelev
+Dan "Wazat" Hale
+Donkey
+dstrek
+Dustin Geeraert
+Edgenetwork
+Edward "Ed" Holness
+Eric "Munyul Verminard" Sambach
+Fabien "H. Reaper" Tschirhart
+FrikaC
+Garth "Zombie" Hendy
+Gerd "Elysis" Raudenbusch
+Gottfried "Toddd" Hofmann
+Henning "Tymo" Janssen
+"Innovati"
+Jitspoe
+Jody Gallagher
+Juergen "LowDragon" Timm
+KadaverJack
+Kevin "Tyrann" Shanahan
+Kurt Dereli
+lcatlnx
+Lee David Ash
+Lee Vermeulen
+leileilol
+Marius "GreEn`mArine" Shekow
+Marko "Urre" Permanto
+Mathieu "Elric" Olivier
+Mattrew "Tronyn" Rye
+MauveBib
+Mephisto
+michaelb
+Michael "Tenshihan" Quinn
+Munyul
+Netzwerg
+NoelCower
+Parapraxis
+Paul "Strahlemann" Evers
+Petithomme
+Q1 Retexturing Project
+Qantourisc
+Rick "Rat" Kelley
+Robert "ai" Kuroto
+Ronan
+Sajt
+Shaggy
+Shank
+Simon O'Callaghan
+SomeGuy
+Spike
+Spirit
+Steve Vermeulen
+Supajoe
+Tei
+Tomaz
+Ulrich Galbraith
+Vortex
+William Libert
+William "Willis" Weilep
+Yves "EviLair" Allaire
+Zenex
+
+**Vegastrike Contributors
+
+*Core Music Team 
+Ken Suguro <magronbass@msd.biglobe.ne.jp> - Lead Music Developer 
+PeteyG <petey__g@hotmail.com> - Music Developer
+
+*Music Contributors
+Falik (Charlie Pecot) <falikshow.com>
+- AyMambo, BlackLlama, Bliss, InnerChild, MezzaMezza, SonOfSandFleaRemix
+m1ck - DepressionChamber, DockingProcedures
+Zaydana - Machina, Mission, Trapped
+
+*Core Development Team 
+Daniel Horn <hellcatv@hotmail.com> - Lead Developer
+Alexander Rawass <alexannika@users.sourceforge.net> - Programmer
+Patrick Horn - Programmer 
+Alan Shieh - Programmer
+
+*Core Art Team
+Daniel Horn <hellcatv@hotmail.com> - Programmer Art & Hornet
+H.E. Day - Cockpit Art
+James Carthew - Sol System Layout
+
+
+*Contributions
+Don Edwards - Planet textures
+John van Vilet - Planet textures
+Bob Hedgewood - Planet textures
+NASA USGS - Planet textures
+
+**Sweet Home 3d Contributors
+
+*Models (License: Free Art License)
+Thanks to Arturo Matheus, Baffab, Ben Omari, Carvalho,
+Christophe Tellerain, Diestel, Dingenskirchen, Don Ravey,
+Emmanuel Puybaret, eTeks, Fabrice Delobe, Ga�l Bettinelli,
+GdB, Geantick, Icybones, Infernal-quack, Jarda Benkovsky,
+LucaPresidente, Maui, Migdalia Lopez, Miguel Angel Serra,
+Nictac, N Mi, Pencilart, Peter Smolik, Rlocatelli,
+Robert Pastierovic, Russian, Sergio Capretta, Sheep,
+Siath, Sleipnir1, Snduc, Theo Blonk, Toomy and Wrosun
+http://www.sweethome3d.com/freeModels.jsp
+
+**Chaos-esque Mod Contributors
+
+*Vehicle Models
+Stephan - Sportster (Car)
+Andrei Maximov - Cruiser (Car)
+Niko Rummukainen - Challenger (Car)
+Jeyfrin Julian - FastCar (Car)
+Mieszko Lacinski - SpeedCar (Car)
+Valter - Yugo (Car)
+Imam Bnjol - PickupTruck (Car)
+Arnaud Nevers - SmallTruck (Car)
+Songkro Bnjol - Sparrow (Helicopter)
+Chris Kuhn - R22 (Helicopter)
+Chris Kuhn - Blackhawk (Helicopter)
+David "DeNapes" Navas - H125 (Helicopter)
+Slappystudios - Submersible (Submarine)
+Ryan "ryanhaldy" Haldeman - SpeedBoat (Boat)
+Emmanuel "Helijah" Baranger - Farman IV (Biplane),
+- AeroCommander (Monoplane), Eindecker (Monoplane)
+Scstrick - Nieuport (Biplane)
+Enrico Stura - Sopwith (Triplane)
+Petr Utinek - Fokker (Triplane)
+VegaStrike Team - Shundi (Spacecraft), Shenzong (Spacecraft)
+MikeeUSA - IV (Tank), LightAPC (Car), Bulldozer
+-(Contrib: Gun Barrels for various tanks)
+Inlite - T27 (Tank)
+Coolinus - LL37 (Tank)
+Dragomir "DaSergant" Petrov - A7V (Tank)
+
+*Mounted Gun Models
+Petr Utinek - Maxim Gun, Spadu
+Scstrick - Lewis Gun
+Lell - Browning .50
+Nils Garrigoux - M134 Minigun
+MikeeUSA - Delugegun, Charbelcher, Battering Ram,
+- SiegeMortar, HotchkissM1914, Gatling1877,
+- (Contrib: T17MM)
+Anterlon - RPK
+Canonfish - Scorpion
+Dragomir "DaSergant" Petrov - PKM
+
+*Weapon Models
+Achei - 1851 Navy Revolver
+Alexey "Leeroy51" Kusnecov - 9mm Pistol, AKS 74u, FN SCAR
+Anthony Myers - Pole Axe, Defender Sword, Bearded Axe
+Arshith "arshith007" Suresh - P90
+Bheema Shankar - 357 Magnum
+"bogieman987" - Bat
+BlacJ4CK - Arming Sword
+Centrion - .50 Pistol
+Clement Wu, Nikolaus & Botanic - FighterSword
+Clint Bellanger - StoneAxe, IronKnife, ElvenAxe,
+- InfantryAxe, Quarterstaff, ElvenSabre, ElvenStaff,
+- WoodAxe, DoubleBitAxe, Pickaxe, ElvenHammer,
+- InfantryStaff
+Cody "bonimoroni" Glassman - SpikedFlail
+Christopher "Knife" K. - 93R Pistol
+Dante - TT33 Pistol (Tokarev)
+Danthecardboardman - Mosin Rifle
+Dragomir "DaSergant" Petrov - Mauser Pistol / MachinePistol
+Dreadbwai - MicroUzi, MiniUzi
+JackBryanReynard - SKS 45
+John95 - G3 base for Assault Rifle
+JohnnyBlack - RA4Launcher, Chainsaw
+Joe Mossman - Mac10
+Jonas Bohrer - Axe
+Daniel "Corvus" Mart�nez - G98 Rifle
+"Dwayma" - SVD Sniper Rifle
+Enrico "Tokabilitor" Steffen - Colt 44 Peacemaker
+Edward "AquaticPenguin" Jones - Browning HiPower pistol
+Felis Leopard - Flintlock Pistol, Musket
+Gabriel Piacenti - Spiked Cudgel
+"Geemusic" - M1903 Rifle
+"Kopie" Stundif - Revolver
+"kromar" Daniel - .45 Pistol
+Krzysztof "Blender-Man" Zwolinski - Katana, Odachi, Yari blade parts
+Gekko - Starblast rifle
+Georgbibrat - .45 Sub-Machine Gun
+GuillaumeCote - RPG7
+hanni2011 - Winchester 1873 Rifle
+ishotdeadman - Styer TMP
+Jake "Eeieeipoo" Bonk - PDW Sub-Machine Gun
+Jeremiah "TheOnlineAnimator" Semanko - Sunbeam
+Leonardo "capnemo" Trombettoni - FAMAS
+Lucian Pavel 728 - FlameThrower
+Matthew "r3m1xx35" Wong - L85A2 Assault Rifle
+Mennoknight - AMR-18 Assault Rifle
+Mephisto - M16A2 Upper Reciever
+MikeeUSA - Pistol, Crossbow, War Hammer,
+- Caltrops, Torch, Multi-Tool, ShortSword,
+- BroadAxe, LongSword, Rapier, Shackles,
+- Spear, Morgenstern, Lightsabre, Crowbar,
+- Longbow, Cudgel, Crude Bow, Composite Bow,
+- Light Crossbow, Flanged Mace, War Mallet,
+- Kiduchi, Shiningstar, Yumi, IronCrow,
+- Handcuffs, Grey Iron Mallet, Dagger,
+- Claw Hammer, BastardSword, Scimitar,
+- WarAxe, PowerSaw, Falchion, Hellriegel SMG,
+- Chauchat, Sho-Sho, BAR 1918, LightsabreII,
+- LightsabreIV, LightsabreXI, Spiked Mace,
+- Sai, Bronze Cudgel, Tec-9, Pounder-SMG,
+- Henry 1860 Rifle, Sharps Rifle, Mare's Leg,
+- Colt Lightning, 8ga Shotgun, 8ga Sawed-Off,
+- 10ga Double-Barrel Shotgun, 10ga Sawed-Off,
+- Military Flail, Arkansas Toothpick,
+- Battle Axe, Kriegshammer, Dadao, Skirmisher's Axe,
+- Bardiche, TemplarAxe, CrusaderSword, Tanegashima,
+- 5.7mm Pistol, T17mm Rifle, Knife (survival knife),
+- CZ Skorpion, SV Skorpion, Winchester 1897 Shotgun,
+- M1897 Trenchgun, Ithaca Stakeout, Flamberge,
+- Street Sweeper (shotgun), Target Pistol, RPD,
+- M249-Para, Claymore, Pudao,
+- (Contrib to: Tetsubo, Yari, MG 08/15, MiniUzi),
+- (Contrib to: 50rnd AK mag, 100rnd AK mag),
+- (Contrib to: 75rnd AK Drum),
+- (Contrib to: 45rnd AK74 mag),
+- (Contrib to: M16 BetaC mag),
+- (Contrib to: 9mm Drum, 9mm BetaC mag),
+- (Contrib to: M82Rifle (added details: fluted barrel, etc)),
+- (+misc programming, editing)
+Milan "darkmil" Rozel - Spectre SubMachinegun
+Muritaka - G36C
+Petr Utinek - MG 08/15
+PrSharkey "Link2.0" - Starlase (A-104)
+Uzurak - M9 Pistol
+RedCoreStudios (A.J,. Fulcher) - Sunbolt, Remington 1858
+(http://redcorestudios.wix.com/home1)
+Rex "CaptainRex" Logen - Crylancer (model)
+Rob "ulf" Walker - Webley Revolver, Pepperbox Revolver
+Robin "Izuzf" Nielsen - (texture for) Crylancer 
+Rocco "SirOccor" Martino - SportShotgun
+Ryan "Rjjonesy99" Jones - Styer Aug, Sunburst
+Sam "LJFHutch" Hutchinson - Sniper Rifle
+Scstrick - Lewis Gun
+Selim "BlenderGE" Kesici - M82 Rifle
+Sirren - Nagant 1895 Revolver
+"Smilex" - AK 47
+Tessa "londonleistone" Stander - Schofield Revolver
+"TheGoat" - Flashlight
+"WeaponGuy" - Spiked Club
+Winthrop Brookhouse - Bowie Knife
+William "john95" Burotn - M16 mini, M16 vn, 44 Magnum
+Wojciech "Veti" Klimas - SPAS-12 (autoloading shotgun)
+
+*Misc Models
+Yorik - Foliage and Trees
+Lauris Kaplinski - Oak (Quercus Robur) Tree
+Julius Krischan Makowka - Old Oak Tree
+- (imported to blender by michalis)
+Christian "Duion" Femmer - Cedar Tree, Swamp Tree
+- Lush Grass sprite
+Dajon - retro table, retro chair
+DanW - Plastic Swivel Office Chair
+yd - Staff (with crystal)
+wobba89 - glassTable
+Umask007 - Wolf, (animation of Golem)
+ubunho - chaise lounge
+thecubber - ShinRae (raptile)
+TiZiana - Wooden Chest (cassapanca), Poltronica
+zeh MX - Large Chest (largechest1)
+Sirren - sirren_: chair, stool, cstool, casing_nagant
+- square table, circular table, long table
+Rosswet Mobile - Fiend (new_thin_zombie)
+Rob "ulf" Walker - Metal File Cabinet, Barrel Wooden
+Pharion - Integrated School Desk, School Desk and Chair
+"Nhumrod" Adam - Pedestal Sink 2
+Nobiax (AKA: Yughues)- Plastic Barrel, Gas Cylinder, BullionBar
+- Greek Pillar, Roman Column
+MikeeUSA - Balloon, Spikeball, Spikes, BasicKCabinets,
+- Metal Tube and Glass Desk, Tribeca Chair, IronBrazier,
+- Abandoned Buildings, Buildable Buildings, Feather,
+- SCTiles Buildings, Coins, Gems, (+misc others)
+Morgan "nubux" Strauss - Ogre(_edits3)
+muddy611 - AO:Cyborg (ao_robot)
+Neil "solvalou" dela Merced - Upholstered Chair, Wing Chair
+Luke "MLDP" Mahoney - Office Modern Leather Chair
+LeeZH - Police
+Konstantin Maystrenko->Concept; AnthonyMyers->Modeller;
+Danimal->Retopo/Rigging/Animation - Knight(Defender)
+Justin Nichol - Wyvern Textures
+Julio Cezar Pires (aka: julioras3d) - Barcelona Chair
+JohnnyBlack - Shmblr (CH1monster)
+John "johndh" Harvey - Iron Maiden (device)
+JCW - workbench
+Jay Artist - Pedestal Sink 1
+Infrared - SChair
+hendori-sama - Golem
+Filipe.Silva - HornDemon
+Dario Maio - Wings (For Seraph)
+Grefuntor - TarBaby (slime)
+Gabriel Piacenti - Imp, Seraph(ArmorKnight)
+eva11dragon - Modern Leather Husk Chair
+Eugene Loza - Dwarf Beer Barrel and Stool
+Enetheru - Wooden: Table, Table0, Bench, Chair
+Daniel Andersson - Blacksmith: Forge, Bellows, Anvil, Grindstone
+Clement Wu, Nikolaus & Botanic - RoyalGuard, Mage
+Clint Bellanger - Skeleton Warrior, Minotaur, Goblin,
+- Zombie(-edits3), Wyvern, Minimalist Chair
+Cody "bonimoroni" Glassman - Gibbet
+bobjh - Spiked Rack (device) (orc_grilling_rack)
+Bela "contmike" Szabo - Solider(armor_rigging-edits)
+arikel - Low Poly Furniture: chair, table, lowtable, shelves,
+- octagonal table
+Arguz "Rgz760" Bautista - Ninja Assassin
+Andrew Kator & Jennifer Legaz - Propane Stove
+Aare - Old Book
+
+*Music
+0ad - Wildfire Games http://www.wildfiregames.com/
+- (0ad Audio License CC-BY-SA
+- http://creativecommons.org/licenses/by-sa/3.0/ )
+Alexandr Zhelanov
+Clearside http://www.clearsidemusic.com
+Daydream Anatomy
+Halcyonic Falcon X
+Joe Reynolds - Professorlamp http://jrtheories.webs.com
+MikeeUSA
+Snabisch
+VegaStrike
+Yubatake http://opengameart.org/content/m31
+Zander Noriega
+
+*Sound FX
+Clint Bellanger - flare soundfx
+Mike Koenig - glass breaking
+
+*Monster Sound FX
+"IFartInYourGeneralDirection" - monster growls
+
+*Additional Game Code
+Mario (Initial code for: Monsters, Zombie Apocalypse)
+MikeeUSA - foliage system, buildable buildings system,
+- city generation system, jails, spell casting,
+- sky cycles, oil ocean, bumpers baloons etc,
+- inventory system, containers, potions, drunkenness
+- stone curse, blindness, nuclear weapons, friend system,
+- additional weapons, misc, etc.
+Samual (Kicked off the spawn-vehicles-around mutator)
+Additional Thanks to LordHavoc, grey, and Divverent
+for all the QuakeC help they've given.
+
+*Textures, Images, and Other
+0ad - Wildfire Games http://www.wildfiregames.com/
+- (0ad Art License CC-BY-SA
+- http://creativecommons.org/licenses/by-sa/3.0/ )
+Ardentryst Sound Team
+- Kendra Pietruszewski
+- Amy Dunwoodie
+- Freesound.org users (Anton, acclivity, adcbicycle, aust, Connum,
+- decembered, Erdie, ERH, FreqMan, Halion, HerbertBoland, inchadney,
+- laurent, Leady, luffy, martian, redjim, reinsamba, Robinhood76,
+- sagetyrtle, Stickinthemud, themfish, Wolfsinger, zebraphone)
+- www.digifishmusic.com
+- (License: CC-BY-SA-3.0)
+BZFlag Team
+Christian Lassure
+CrystalSpace Team
+Iwan "qubodup" Gabovitch (ignition SFX)
+Jellocube27 (SVD reticle)
+John "johndh" Harvey (colored edits to magic circles)
+Keith333 - (SeaWavesB)
+- (http://www.benkyoustudio.com/Textures/)
+Luke.RUSTLTD - magic circles
+Martin "Mikodrak" Jelinek - Fire_1F FX
+Michael Klier (futuristic_smg_single_shot.wav)
+MikeeUSA
+Pedroserafin (notify_fire)
+Peter Diem (Austrian Coat of arms)
+rubberduck - MagicFlame FX
+Sten Porse
+S. Seyfert - feather texture
+The Free Firearm Sound Library 
+ (created and recorded by Ben Jaszczak, Brian Nelson,
+  Kevin Heras, and Matthew Nanney)
+Vegastrike Team
+WrathGames Studio http://wrathgames.com/blog - Fire1 FX
+Xianmin Chang
+Yorick (Fleur de lys)
+Yughues (AKA: Nobiax) and Burningwell (ironknife base textures)
+
+Thanks to John Carmack, Michael Abrash
+John Cash, John Romero, American McGee
+Sandy Petersen, Tim Willits,
+and all the Original Quake team.
+Without you there would be no DarkPlaces,
+no Nexuiz, no Xonotic, and no inspiration.
+
+Special thanks to NASA for images of space and planets.

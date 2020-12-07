@@ -1,0 +1,59 @@
+Use GMQCC for everything except the menu quakeC. FTEQCC creates errors in 
+the game code, specifically the weapon system macros.
+-------------------------------------------------
+If you are using FTEQCC and get a "Too many types" error:
+
+	************ ERROR ************
+	Too many types
+	Error in ../common/util.qc on line 2512
+	
+Go into the fteqcc source:
+(cd ~/xonotic-concrete/xonotic/fteqcc)
+fteqcc/qccmain.c
+go to line 2911.
+Change:
+	MAX_FUNCTIONS	= 16384;
+	maxtypeinfos	= 16384;
+To:
+	MAX_FUNCTIONS	= 32768;
+	maxtypeinfos	= 32768;
+	
+If you get "Too many fields" error:
+	:2: error: Too many fields. Limit is 4096
+	************ ERROR ************
+	
+go to line 2909.
+Change:
+	MAX_FIELDS		= 1<<12;
+To:
+	MAX_FIELDS		= 1<<17;
+
+
+Recompile FTEQCC (make clean; make)
+Try your compile again, it will work.
+-------------------------------------------------
+
+For some reason when compiling with the gmqcc "stack", alternative menu languages
+do not work. Something is probably misconfigured.
+
+When compiling with the fteqcc "stack" menu languages work, but there are bugs
+in fteqcc that cause game problems.
+
+So the solution, so far, is to first compile with fteqcc.
+then move ../menu.dat to somewhere else.
+
+Then in qcsrc make clean.
+Then compile qith gmqcc.
+
+Then copy over the "old" menu.dat .
+Then everything works.
+
+I think the menu system is in C++ so I don't know why this matters.
+
+----
+If you compile a "final" version with fteqcc weapon dropping with the extended
+weaponsets will not work correctly. Who knows why. You'll lose random weapons.
+Sometimes you will gain a weapon.
+
+However fteqcc can catch some (quake c) code errors that gmqcc does not (using global 
+names you shouldn't use etc), So it's useful to compile in fteqcc often to check.

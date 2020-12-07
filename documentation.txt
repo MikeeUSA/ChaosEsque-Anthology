@@ -1,0 +1,793 @@
+**Introduction
+Hello and welcome to Chaos-Esque Anthology: a modification of Xonotic.
+Chaos-Esque adds a wealth of additional features and options to the game world to allow you to synthesize
+the combat environment you desire to fill with feats of extreme oppositional maneuvering.
+These additions include: Buildable Buildings, Spells and Potions, Environmental Mutators, Mounted Guns, a
+City Generation system, and the spawning of additional items such as weaponry and such things as spikes,
+baloons, and other hazards. An inventory system is also included. Before we delve into all of that however,
+there is one crucial tool that must be mastered: 
+
+
+*The console
+
+The first thing that must be known is how to bring up the text console for the entering of extended commands
+To do so press ~ or Shift+Esc. To exit the console press Esc or press ~ again.
+
+
+*Picking up items, Opening doors, Entering Vehicles
+
+The second thing that must be known is to how to collect items.
+In Chaos-Esque this is by way of the USE key: F.
+Go near an item, and if you wish to acquire it into your inventory press F.
+
+The USE key (F) also works to open some doors and enter vehicles (be walking at the vehicle while pressing F)
+
+
+*Inventory
+
+To list your inventory enter the console (~ or Shift+Esc) and execute the command:
+          inventory
+
+The   inventory   command will also list your stats, what spells you know, and your body temperature if the map has
+an ambient temperature set.
+
+You can use tab completion to allow it to type faster (type in inv and then press the TAB button on your keyboard (inv<tab>))
+To search nearby chests use the   search   command in a similar fastion
+To drop a weapon press Backspace. To drop a pack of the ammo that weapon uses press F+Backspace
+You can also drop items using the   drop   command.
+
+To list the inventory of the world, surrounding buildings, and other stats such as the ambient temperature execute the command:
+          worldinventory
+
+
+
+**Buildable Buildings
+The buildable building system is one of the premier features of the Chaos-Esque Anthology modification of Xonotic.
+It allows the player to build not only buildings, but also defensive structures such as turrets and point defense guns,
+aswell as vehicles and barriers such as walls and obstructions. There are two building tools in Xonotic: Chaos-Esque Anthology.
+There is the multitool; a building tool which creates medieval structures, and the utilitool;
+a tool which creates futuristic structures. Hammers can assist in the building of a structure from a placed scaffold.
+
+
+*Equipping the player with a building tool
+
+In-order to build one must have the tools. In this case the tools are a multitool or a utilitool, and a blunt object such as
+a hammer. To start players with a multitool or utilitool one may go to either:
+Multiplayer > Create > Mutators   or   Multiplayer > Create > StartWeapons 
+
+Multiplayer > Create > Mutators   is sometimes the more convenient of the two options as the multitool and utilitool start weapon
+options are along the bottom of the screen.   Multiplayer > Create > StartWeapons   will allow you to select any of the weapons.
+
+Next to the multitool and utilitool options in the Mutators menu there are a number of additional check boxes. These disable
+costs associated with building such a resources, time, and research. A quick way into the game of design is to click the multitool
+and the 3 boxes associated with it. Mousing over the checkboxes will give you information as-to what they do. In the
+StartWeapons dialogue there are those options aswell as further options near the top right of the screen. Here you can enable
+and disable various options such as what vehicles can be built, where one can build, and what Era the multitool works in.
+The "MT Ancient" option toggles whether the multitool builds medieval defenses and vehicles or WWI style war engines.
+Below the "MT Ancient" option are other useful options such as a setting that creates additional spawnpoints when you build
+a bed or similar furnishings.
+
+In addition to the multitool and/or utilitool, it is prudent to equip a hammer and a crowbar. There are many hammers in the game,
+any one of them will be sufficent for changing to once a scaffold is placed and hammering it until the building appears. There
+are two crowbars in the game: the Crowbar and the more archaic IronCrow. Their utility is to quickly destroy errant scaffolds
+one might accidentally place.
+
+
+*Multitool/Utilitool Basic Controls
+
+Once one has a multitool or utilitool in hand, how does one use it?
+The Left Mouse Button actuates the tool while the Right Mouse Button scrolls through the list of buildings, blocks, and
+furnishings you can build. Pressing Shift+Right Mouse Button reverses the direction of the list scroll. You can hold down
+the Right Mouse Button to accelerate the scrolling.
+
+
+*Multitool/Utilitool Resources
+
+Your multitool or utilitool needs resources to operate. These come in the form of ammunition you might find lying around the maps,
+and of converted resources, which are converted from ammunition using the utilitool and multitool.
+
+To convert nails into convertednails press: E+R 
+To convert rockets into convertedrockets press: Shift+E+R
+To convert cells into convertedcells press: F+R
+
+Converted resources can also be gained by killing opponents: you will be rewarded with a portion of whatever ammunition they were
+holding as converted resources. Think of converted resources as the "essence" of the ammo resource: it is not ammo, but it came from
+it. Converted nails are akin to Iron. Converted Rockets are akin to Fire. Converted Cells are akin to Energy and Magic. They are
+elemental in a way.
+
+When a tree is cut down convertednail resources are gained. If a tree is blown up the acquired convertednail resources are
+reduced by half.
+
+
+*Multitool/Utilitool Misc Controls
+
+F+Right Mouse Button changes the Z-Snap of whatever you build, Shift+F+Right Mouse Button scrolls the Z-Snap in the opposite
+direction.
+
+
+*Building with the Multitool/Utilitool - Part I
+
+The first thing one must build is something that can hold land. For the multitool this is the garrison. For the utilitool this is
+the command post. Gather some resources: take some nails, convert some by pressing E+R while holding the multitool. Once you have
+a good ammount, but also have some free nails (press F to pick things up) scroll to the garrison or the command post and press the
+Left Mouse Button to place a scaffold for it. Now change to a hammer (or set the multitool/utilitool back to melee) and hit the
+scaffold with the hammer until the building appears. Your friends can get in on the action and hammer the scaffold with you to
+build it faster.
+NOTE: Try to protect your scaffolds: tanks can easily roll over them and destroy them in an instant.
+NOTE: If you destroy your own scaffold you will be returned your convertednails but nothing more.
+
+Once the garrison or commandpost is built you can then build other buildings around it. The garrison and command post, aswell as
+the small castle can take and hold land, so they are the first buildings to be built.
+
+One thing to note: one cannot build in enemy controlled land. As you build buildings the land that becomes yours expands. Buildings
+can be captured, however, but garrisons, command posts, and castles will "lock down" the lesser buildings and must be captured
+first before those under their auspices can be turned.
+
+
+*Building with the Multitool/Utilitool - Part II
+
+Some things to note when building: some buildings require certain knowlege inorder to be built. To gain this knowlege one must read
+books on the required subjects. However it is possible to start players with the requisite subject-matter by enabling the knowlege
+check-boxes at the bottom of the StartWeapons dialogue. You can also disable the requirement for knowlege via the
+"Zero Knowlege" check-box at the top of the StartWeapons dialogue.
+
+Some buildings require forge-parts for their vehicles or turret sub-parts. If you do not have these resources the building will still
+be built, but without the vehicle or the turret. To obtain forgeparts build a forge of the proper type and enable it by pressing F
+at its control point (this toggles it on and off). It will take converted resources from you or from your teammates inorder to
+create the forgeparts.
+
+Some buildings on the utilitool side require energy or oil to run and produce output (for the ammo tower, etc). Inorder to run these
+you must build solar panels, energy tanks, oil tanks, oil pumps, etc. You can control their distribution using local energy tanks
+and local oil tanks and oil control units. Additionally factories are more efficent if there is a furnace or two next to them.
+NOTE: Solar panels will not produce energy if under an energy shield or if they cannot trace to the sky (or very far up into the
+ambient ether). Additionally it often takes many tries in different areas before oil is found via oil well.
+
+
+*Multitool/Utilitool Commands
+
+For easier access to the selection of what is to be built there is the multitool command (also accessable via utilitool command).
+To use this command, have the multitool equipped and open the console (~ or Shift+ESC) and type multitool
+You can also use tab completion to speed up the process. multi<TAB> sele<TAB> 
+
+Here is a list of the multitool / utilitool commands:
+          multitool blocktype
+          multitool placetype
+          multitool buildingsnap
+          multitool wallsnap
+          multitool wallshift
+          multitool vaultwings
+          multitool lockz
+          multitool lockz2me
+          multitool lockz2building
+          multitool lockzplus64 [optional multiplier]
+          multitool lockzminus64 [optional multiplier]
+          multitool setlockzmanually [number]
+          multitool lockzprev
+          multitool flipblock
+          multitool select [block|wall|foundation|bridge|turret|building|floor|obstruction|none]
+          multitool select block [filled|corrugated|shingles|curtain|castle|polish|hedge|graystone|sandstone|marble|wood1|wood2]
+          multitool select wall [hedge|brick|palisade|roman|berm|curtain|castle|polish]
+          multitool select floor [wood|tile|stone|granite|marble|romanmarble]
+          multitool roofblockcolor [color or 0 to 17]
+          multitool castleblockcolor [color or 0 to 7]
+          multitool sandstoneblockcolor [color or 0 to 5]
+          multitool marbleblockcolor [color or 0 to 22]
+          multitool woodblockcolor [color or 0 to 17]
+          multitool frlock
+          multitool frlock2me
+          multitool frlock2floor
+          multitool doorcenter
+          multitool furndrop
+          multitool noturretsintowers
+
+The most used of these are by far:
+          multitool select
+          multitool lockz
+          multitool lockz2me
+          multitool blocktype
+          multitool placetype
+
+"multitool select" helps you speed up the selection process.
+For instance, "multitool select pointdefense" will select a mounted gun for building.
+
+"multitool lockz" locks Z to whatever the Z (up down) of the last thing you built was.
+(executing the command again disables lockz)
+
+"multitool lockz2me" sets lockz to that of your player.
+
+"multitool blocktype" sets the collision of the trace routines used to set down scaffolds;
+toggle it to build buildings ontop of buildings.
+
+"multitool placetype" toggles how the scaffolds are to be placed: straight down, or forward and then down.
+
+
+*Control Points
+
+Each building, block, etc that is built possesses its own control point. By standing on a control point of a
+building for a period of time player can capture a building or fortify his existing buildings. Additionally 
+if teammates or friends (the friends system can be enabled in   Multiplayer > Create > Advanced Settings  ) stand
+on or near the control point it will capture or be fortified with increased haste.
+
+Buildings which can take and hold land (such as garrisons, small castles, strongholds, commandposts, etc)
+will protect the lesser buildings from being captured and thus must be captured first. (Note: if the control
+point of the land-holding class of buildings is encased it will not lock down the surrounding lands)
+
+
+*Recruitment Posts
+
+Recruitment posts attract monsters to your cause. For them to attract monsters they must be built near or in
+the correct building type. Different building types attract different monsters. To enable or disable a
+recruitment post press   F   while standing at it. Monsters also require housing and food, thus a sufficent
+amount of residential buildings (houses, apartments, barracks, etc) must be built. Beds also provide housing.
+For food, fields or greenhouses must be built. (command example:   utilitool select farm   )
+
+To view the amount of housing and food (grain, greens, grapes, etc) that exists execute the command     
+          worldinventory
+in the console.
+
+The recruitment post for the multitool recruits medieval style soliders and fighters while the utilitool 
+recruitment post recruits cybernetic soliders.
+
+The following buildings, with a recruitment post, attract the following soliders:
+          Multitool:
+          Small Castle -- Royal Guard
+          Barracks, Stronghold -- Knight
+          Dojo -- Fighter
+          Shrine -- Ninja Assassin
+           
+          Utilitool:
+          Security Building, Glass Base -- Solider
+
+
+*Marshalling
+
+Once recruited, soliders may be marshalled. Marshalled troops will follow your lead and can be directed to attack
+areas. The console commands associated with marshaling are:
+          marshal
+          marshalarea
+          marshalfield
+           
+          marshalformation
+          marshaldedication
+           
+          marshalattack
+          marshalreattack
+          marshalrenewattack
+          
+          marshaldefend
+          
+          marshallist
+           
+          unmarshal
+           
+          (NOTE: To open the console press ~ or Shift+Esc. To exit the console press Esc or press ~ again.)
+           
+The commands:   marshal   ,   marshalarea   ,   marshalfield    marshal troops from an increasingly wider radius.
+The command:   unmarshal    can be used to disband ones army. The command:   marshallist    lists the troops at your
+disposal. Executing   marshalattack   in the console will instruct your army to attack the area you are looking
+at, while   marshaldefend   will recall them to your side. The command:   marshalformation   will set how tight
+together you want your troops to be, while   marshaldedication   sets how dedicated they are to reaching their goal.
+
+
+*Doors
+
+Doors may be part of a buildable building or may be built separately (to jump to the door building section of the
+multitool/utilitool selection enter, in the console, the following command:   multitool select block door   ).
+Heavy doors often must be shot open with a gun or an arrow. Doors owned by the player can be locked and unlocked.
+The following console commands are associated with doors:
+
+          lock
+          softlock
+          hardlock
+          unlock
+           
+          (NOTE: To open the console press ~ or Shift+Esc. To exit the console press Esc or press ~ again.)
+
+To lock a door you own, approach it and enter the command   lock   . The door will softlock: it will open only for
+you or your team or friends. If you enter the command   lock   again while facing the door it will hardlock. A hardlocked
+door will not open for anyone, it must be unlocked or softlocked first. To unlock a door enter the command   unlock   .
+The door will now open for anyone. To softlock a door enter the command   softlock   . To hardlock a door enter the
+command   hardlock   .
+   
+
+
+
+**City Generation
+Another feature Chaos-Esque Anthology boasts is a city generation system.
+The city-generation system allows you to specify that a city or a city and a number of small towns is to be
+created on the map. The buildings which are created are not simply boxes with an outward appearance but no depth;
+they all have interiors which you can fully explore and, if you wish, which you can fortify using doors and other
+objects from the multitool or utilitool. If you toggle   multitool blocktype   in the console you can even build
+other buildings atop these generated cityscapes.
+This system is accessable in the   Multiplayer > Create > Mutators   dialogue under the Misc Items heading.
+
+*Enabling City Generation
+To set the game to generate a city at start up do the following:
+Open the    Multiplayer > Create > Mutators   dialoge
+Select the   Misc Items   checkbox, a myriad of options will now light up ready to be set.
+Scroll down to   AbdBldgs   ,set it to the number of buildings you want.
+Scroll to   Concrete   ,set it to something low: 0 or 0.1
+Scroll to   SC Tiles   ,set that to something high: 1
+
+Now when you start the game, when the first player spawns a number of buildings will be created around the map.
+
+But they are scattered...
+
+
+*Specifying a City
+
+In the   Multiplayer > Create > Mutators   dialoge under the    Misc Items > AbdBldgs    section, below the
+SC Tiles   slider there is an option called   City   . To have a central city set this slider to 1.
+Below the City slider an   X   and a   Y   slider have now become highlighted, use these to set the location
+of your city. There is also a   %   slider which can be used to set the percentage of buildings that will be
+located inside the city as opposed to being scattered outside (The default is 100 percent within the city)
+
+
+*Configuring a City
+
+Below the   X   and   Y   sliders is a   CMdw   slider; This allows you to specify if you want to allow foliage
+to grow in your city. The slider to the right of the   CMdw   option allows you to specify how far away to keep
+foliage away from the city.
+
+
+*Multiplying Buildings
+
+If you scroll further down in the   Misc Items > AbdBldgs   section you will come to an area labeled   Array
+and below that is   Ring1   and   Ring2   . What these options do is specify the percent chance that rather than
+just one building being built in a spot a 3x3 array will be built instead for a total of 9 buildings for the price
+of one!   Ring1   extends this with another band of buildings (4x4) and   Ring2   even further (5x5). If you specify
+Ring1   and/or   Ring2   but leave   Array   low or disabled it will omit the array but still create the rings of
+buildings. Thus you can set    Misc Items > AbdBldgs   to a low amount but still generate many buildings. 
+
+
+*Zoning
+
+Scrolling down more you will come to the   Neiborhood Zoning   section. This section allows you to specify how often
+one zone of SC Tiles buildings blends into another type of building. The types are varied from commercial, to industrial,
+military, suburban, etc. The   KT   slider is the one most often used: slide to 1 to prevent much migling of building
+types. The   IG   slider sets how often to ignore a particular building; this can help spice up a Neiborhood with small
+ammounts (or large ammounts) of seemingly random additions. BL   sets the blend rate between different zones. SR   sets
+the search radius for looking for what zone one is in, if this is set higher, zones will tend to be larger and have more
+influence over the surroundings. The   UC Radius   slider sets how far the Upper Class - Middle Class suburban transition
+band extends. This heavily influences the suburban look of your city. 
+
+Below these options is 2 row array of small sliders. Each of these allows you to increase the amount of a particular 
+building type in your city. Mouse over to see which slider affects which zoning setting. Using these sliders one can
+create a military city or an especially commerce driven city.
+
+
+*Different Buildings
+
+Right below the   Multiplayer > Create > Mutators    Misc Items > AbdBldgs   section is a series of five options:
+   Concrete
+   Glass
+   Built:Ancient
+   Built:Aorist
+   SC Tiles
+
+Each of these sets the comparitive amount of that building type which will be generated by the city generator.
+Concrete   builds abandoned concrete buildings, all the same.   Glass   builds abandoned glass buildings, all the same.
+Built:Ancient   is somewhat more interesting: it builds Buildable Buildings of the type the multitool can create.
+Built:Aorist   places futuristic buildings that the utlitool can create. Both of these can be captured.
+SC Tiles   is the most interesting of all: it places on the map a multitude of different city, suburban, industrial, etc
+buildings around the map. We explored some of the options associated with the SC Tiles above.
+All buildings from any of these choices have interiors which you can fully explore and make use of in your fight.
+
+
+
+**Friends
+Chaos-Esque Anthology includes a friendship system that a server admin may enable. This allows players to create
+alliances, and to break them, as they see fit. It also allows them to set policy for their buildable buildings
+such as automated turret towers aswell as whom doors will open for.
+
+*Enable Friends
+
+To enable the friends system open the menu dialogue   Multiplayer > Create > Advanced Settings   , then scroll down
+past   Teamplay Settings   to    Teams   ; there you will see a checkbox labled   Friends   ; press that checkbox
+to enable the friends system.
+
+
+*Make a Friend
+
+To "friend" another player, approach a player, open the console, and enter the command   friend   . That player
+will now be counted as your friend. It is advisable that the other player also "friend" you in the same manner.
+Many mechanics check if the friendship is mutual before executing.
+(Note: This mainly happens in non-team games. In teamgames only teammembers may be friends, by default.)
+
+
+*Viewing List of Friends
+
+To see whom you have "friended" open the console and enter the command   listfriends   .
+
+
+*Removing a Friend
+
+To remove a friend open the console and enter the command   removefriend x    with x being the number of the friend
+on the   listfriends   list.
+
+
+*Friend Commands
+
+Commands associated with the friend system are:
+          friends
+          unfriend
+          listfriends
+          listexfriends
+          restorefriend
+
+Commands associated with the tolerated in the friend system are:
+          tolerate
+          untolerate
+          listtolerated
+          restoretolerated
+
+          tolerateall
+          tolerateloveall
+          tolerateloveallabsolutely
+          toleratenone
+          tolerateabsolutelynone
+
+Commands associated with the hated in the friend system are:
+          hate
+          unhate
+          listhated
+          listexhated
+          restorehated
+
+          (NOTE: To open the console press ~ or Shift+Esc. To exit the console press Esc or press ~ again.)
+
+
+*Toleration and Hate
+In addition to friends, one can have lists of those who are merely tolerated, or those who are hated.
+By default, those who are tolerated will not be fired upon by a player's buildings, and will not be attacked by his monsters
+unless they are attacked first. When a player is removed from the tolerated list (by the command   untolerate   or an alias)
+they are placed in the exfriends list and can be restored via the   restoretolerated   command (restoretolerated x   where x
+is the number they occupy on the exfriends list).
+
+Those who are hated are always attacked by a players monsters and towers, even if they are "friends" too! To hate someone
+eye them, even from a distance, and enter the command   hate   . To unhate someone enter the command   unhate x   where x is
+the entry on the    listhated   list.
+
+A global policy can be set by a player at will. The command   tolerateall   will see all non-categorized players as tolerated,
+while   tolerateloveall   will see them as friends   and   tolerateloveallabsolutely   even lets them enter one's doors. There
+is also   toleratenone   and   tolerateabsolutelynone   which begin to hate all comers. Your monsters and turret towers will
+act accordingly.
+
+
+
+**Jailing and Torture
+Chaos-Esque Anthology includes a method for jailing opponents, (or teammates), if the map or the buildings you build have
+prisons or duengons.
+
+
+*Capturing a player
+
+To capture a player first you must have the handcuffs or shackles. To capture a player approach them while holding the handcuffs
+or the shackles and attack them with it via the Left Mouse Button (primary fire). If you are in range they will be captured.
+To move them to one side or the other look at them and press the LeftMouseButton again, or Shift+LeftMouseButton. To release them,
+look at them and press the RightMouseButton. When a player is captured they will lose their weapons and not beable to pick new
+ones up.
+
+
+*Jailing a player
+
+To jail a player take a captured player to a jail and release them inside the jail cell. The maps krilldonjon, darkhold,
+desertcastles, and opposingcastles all have jails that can be used. The buildable buildings: security building, gaol,
+and small jail, contain jails.
+
+A player can also be chained to a torture device, a post, or the wall if there are appropriate restraints. The following maps give
+this option: krilldonjon, darkhold, opposingcastles. The following buildable buildings do aswell: Gaol. Players are placed by
+releasing them (RightMouseButton while looking at them and holding the Shackles or Handcuffs) in the device area.
+
+Jailed/Chained players will respawn where they were jailed or chained, again and again, untill they are freed (if ever).
+To become free, the player must escape the jail, or be release outside of the jail.
+
+
+*Extended Torments
+
+When a player is chained to a wall or a torture device, he can be blinded or mangled.
+To do so the tormentor must approach the subject with a bladed or spiked weapon in hand. Then the tormentor may enter
+the console command   blind   or the console command    mangle    or   hobble . These injuries will be permanent for the current 
+match, including if the player exits and rejoins. There are a few other commands possible, if the server admin allows it.
+
+
+ 
+**Spawn Preferences
+Chaos-Esque allows the player to decide if he wishes to spawn in his own buildings he has built, his mutual friends
+buildings, or the normal maps spawns. This is accomplished by the   spawnprefs   command. By executing the   spawnprefs   
+command in the console, one can toggle through the options. One can also enter a direct command to set one's spawn 
+preferance. The list of commands are:
+
+          spawnprefs
+          spawnprefsany
+          spawnprefsfriends
+          spawnprefsfriendsonly
+          spawnprefsmap
+          spawnprefsmine
+          spawnprefsnone
+          spawnprefsnormal
+          spawnprefsnormalonly
+
+          (NOTE: To open the console press ~ or Shift+Esc. To exit the console press Esc or press ~ again.)
+
+
+
+**Quest Spawns
+Quest-spawns allow you to play a map in a single-player-esque way. When questspawns are enabled, if a map has a
+questspawn area set in its .mapinfo file, then all other spawnpoints are disabled and new spawnpoints are generated
+in that area. Otherwise a random area is selected and new spawns are created in that spot. Thus a starting-point for
+the map is created. One notable map where this system is taliored to is DarkHold.
+
+
+*Enable Quest Spawns
+
+To enable questspawns open the menu dialogue   Multiplayer > Create > Advanced Settings   , then scroll down
+past   Teamplay Settings   to    Teams   ; there you will see a checkbox labled   Quest Spawns   ; press that checkbox
+to enable questspawns.
+
+
+
+
+**Spells
+Chaos-Esque Anthology includes a spell casting system which allows players to learn spells by reading spell-books and
+to cast spells by reading scrolls or casting the spell from memory if a spell-book of that type has been read and 
+the player posesss sufficent mana. Starting mana can be set in the   Multiplayer > Create > Advanced Settings   dialogue,
+aswell as in the   Multiplayer > Create > Spells   dialogue. Mana can also be gained by drinking potions of mana and 
+potions of rejuvenation.
+
+
+*Selecting and Casting Spells
+
+To iter forward through your spell list press   x   , to iter backwards press   z   , to cast the selected spell press   c   .
+To see the status of your spells enter the console command:
+          spellstats
+
+To cast a spell you know enter the console command:
+          cast spellname
+
+To read a scroll enter the console command:
+          read scroll spellname
+
+To read a book in-order to learn a spell enter the console command:
+          read book spellname
+
+          (NOTE: You can also read a skill-book in the same way to learn an architectual skill
+          for use in the buildable building system)
+
+
+*Starting Spells
+
+Using the   Multiplayer > Create > Spells   dialoge one can set what spells players will start with.
+Starting mana can also be configured using this dialogue.
+
+
+*Spell Descriptions
+
+Agency                        You and I; I take your place, and you take mine.
+
+AcerviLux                     From your hands a holy lance, a beam of light, to end unholy dance.
+
+AquaCaelestis                 Water from the heavens.
+
+BallLightining                Though not lightining-in-a-bottle... close.
+
+Cancellation                  Counter a spell.
+
+ChainLightining               Lightining at enemies in all directions (and perhaps some left for friends aswell!)
+
+ChargedBolt                   Erratic electro-static discharge willed towards your enemy...
+
+Clairvoyance                  What do you see in your minds eye? What can you see that I cannot?
+
+CorvusPenna                   Raven feathers
+
+DarkRitual                    This spell requires three participants: the caster, the transferee, and a sacrifice
+                              all participants must be players or bots (monsters are not accepted). 
+                              The transferee must stand in close proximity to the spell-caster. The sacrifice
+                              must be infront of the spell-caster and in his aim, though at higher levels of
+                              the spell the sacrificial target may be varying distances away from the spell-caster
+                              and transferee. The sacrifice target must be either: chained, shackled, handcuffed,
+                              in paralysis, or a prisoner. When the spell is cast the value of the sacrificial
+                              target is evaluated. A good sacrifice brings rewards to both the spell-caster and
+                              the transferee: first the mana held by the sacrifical target is given to the 
+                              spell-caster and the transferee: 2/3 to the spell-caster and 1/3 to the transferee;
+                              then a portion of the life force of the sacrificial target is converted into mana
+                              and distributed to the spell-caster and transferee: 1/3 to the spell-caster,
+                              2/3 to the transferee. A higher quality sacrificial subject rewards a greater
+                              percentage transfer aswell as a higher conversion rate. Be wary: poor sacrifices
+                              are offensive and can lead to injury to the spell-caster and transferee... or even
+                              death for both.
+
+Death                         Suddenly, the touch of death befalls he directly in the spell caster's sight.
+
+DrainLife                     From your life-force; I do quench my thirst. But I do pray...
+                              that I do not find myself drinking death...
+
+CastFromLife                  My life-force is the well from which I draw, the strenth with which at you to gnaw.
+
+Confer                        Mighty and powerful your life-force is, and weak surely is mine. But what if...
+                              it were reversed? But I must be wary, there are those creatures seemingly living...
+                              that are not...
+
+Explosion                     Let us walk the path of explosions, together...
+
+Extinguish                    This spell extinguishes all life and burning embers in a vicinity.
+
+Fireball                      A fireball.
+
+Firebeam                      A momentary beam of fire.
+
+Firebolt                      A small bolt of fire.
+
+Firewall                      A wall of flame; no two the same.
+
+Flameburst                    Fireballs in all directions.
+
+Frostbeam                     A momentary beam of frost the freezes that whom it contacts.
+
+Grace                         A magic circle of sanctuary appears.
+
+Heal                          Heal another.
+
+HolyBolt                      Life to the living, and an end to the undead.
+
+HolyLight                     An orb of light to brighten your path.
+
+HolyWord                      Gives life to the living in the vicinity, and damages all the undead around the caster.
+
+Iceball                       Frozen solid, and moving forward.
+
+Icestar                       If beneath the immortal sky one does call, a star of ice to thee befall.
+
+Inferno                       Into being, a burning beam that ignites what it touches, is called.
+
+Lightining                    A beam of lightining is called forth.
+
+LightiningBurst               BallLightining in every direction (though half as strong)
+
+LightiningStrike              Lightining brought down from the heavens.
+
+LightiningWall                A wall of lightining.
+
+MagicBullets                  A barrage of projectiles is called forth.
+
+MagicMissile                  A magic bolt appears and will track its target.
+
+MagmaSphere                   A sphere of burning stone is willed to be.
+
+ManaShield                    Damage is dealt, now only a portion to one's life, the rest to one's magical power instead.
+
+Meteor                        A meteor called down from the sky.
+
+MeteorShower                  A meteor down from the sky; if only it were only one!
+
+Mimic                         Nice visage: mind if I take it?
+
+MonsterToMonolith             A monster becomes huge.
+
+MonsterToMouse                A monster becomes small.
+
+Nivosus                       Snow
+
+Paralyse                      No movement, but one can see and feel.
+
+PhantasmalBarrier             Unseen, but acts, in ways, as a wall.
+
+Plumosus                      Feathers of white
+
+RaiseUndead                   Wherever a player has died, here is raised a zombie.
+
+Repair                        Repair vehicles, buildings, turrets.
+
+RingOfFire                    Around the spell caster is called a blaze; burning death as fires rage.
+
+Rosa                          Rose petals
+
+ScepterOfFlame                A column to the clouds, not of holy light; a type of tower in-which elementals delight.
+
+StoneCurse                    Not all statues are carved, some are called.
+
+StoneRain                     And they complain that a typhoon is damaging to buildings...
+
+Timesink                      They slow, but you do not. Time... this time... is on your side.
+
+VampyricConduit               A magic circle appears, damage done to those without, comes as life to those within.
+   
+
+*Spell Notes
+
+Dark spells often are more powerful belowground, while holy spells often have more
+power above-ground underneath the sky. The cost and recovery from a fire spell can
+be reduced by wielding a   Staff Of Flame   , while the same can be said for pure magic spells
+while wielding a   Magicians Staff   . A number of spells call forth from the sky: they are ineffectual
+below ground where there is no view to the sky. Beware of drawing life from the undead: for it
+is not life you draw.
+
+
+
+
+**Grenades
+Chaos-Esque Anthology's deployable munitions selection include:
+Grenades    : standard concussion grenades
+Fragnades   : grenades that disperse many deadly fragments
+Flashbangs  : deployable asset that blinds enemies in a radius upon exploding
+Smokenades  : asset which creates a smokescreen 
+Landmines   : anti-personnel mine which can be buried if placed on a suitable surface.
+AT Mines    : anti-vehicle mine with a large explosion radius, which can be buried aswell
+
+
+*Grenade Commands
+
+Grenades can be selected by pressing the button   v
+   (or by entering the console command   grenadeselect   )
+Grenades can be thrown by pressing the button   g
+Mines can be buried by pressing the button    j
+   (or by entering the console command   bury   )
+
+Starting grenades can be set in the    Multiplayer > Create > StartWeapons   dialoge.
+
+
+
+**Basic Tips
+
+To spawn vehicles, mounted guns, turrets, monsters, and hazards randomly in the map go to
+Multiplayer > Create > Mutators   and enable their respective options.
+
+To start a game go to Multiplayer > Create , select a match type, a map, and press "Start Multiplayer!" or "Play"
+
+
+
+*Vehicles & Mounted Guns
+To enter a vehicle or a mounted gun hold F (The "use" key) or E while approaching the vehicle.
+To exit  a vehicle or a mounted gun press F (The "use" key)
+
+To turn the engine on and take off when in an aeroplane press  E + W
+
+To load or reload a vehicle or mounted gun from its ammo reserves press R (The "reload" key)
+To replenish the ammo reserves of a vehicle or mounted gun press E + R (The "reload" key)
+(Note: fusion reactors will replenish the ammo reserves on a vehicle or mounted gun when in range)
+
+To increase the gun elevation in a non-automated battle tank press Spacebar 
+To decrease the gun elevation in a non-automated battle tank press Shift 
+
+To increase the ROF of the rotary mounted guns press Spacebar 
+To decrease the ROF of the rotary mounted guns press Shift 
+
+In a vehicle, to increase the ROF of the rotary mounted guns press  E + Spacebar 
+In a vehicle, to decrease the ROF of the rotary mounted guns press  E +  Shift 
+
+In a vehicle, to increase the speed of the engine press  E + W  (if the vehicle supports throttling)
+In a vehicle, to decrease the speed of the engine press  E +  S  (if the vehicle supports throttling)
+
+To change to alternative (keyboard only) controls in an aeroplane vehicle enter the command:
+          altaircontrols
+
+
+*Weapons
+To pickup a weapon or item press F (The "use" key)
+To reload a weapon press R (The "reload" key)
+
+To change to an extended magazine, if available
+press F (The "use" key) + R (The "reload" key)
+
+To attach a suppressor to the .45 Pistol, the Rifle, or the MachineGun (Mac-10) 
+press F (The "use" key) + R (The "reload" key)
+
+To attach a suppressor, if available, when possessing extended magazines
+press Shift + F (The "use" key) + R (The "reload" key)
+
+To turn on the flashlight press R (The "reload" key)
+To change the color of the the flashlight press F (The "use" key) + R (The "reload" key)
+To change the focus of the the flashlight press F (The "use" key) + Shift  + R (The "reload" key)
+
+
+*Movement                                                                                Brawling
+To move forward press W. To move backwards press S.          Punch:  W W     Uppercut:    Shift + W W
+To strafe left press A. To strafe right press D.                     Kick:   W W       (While in air (Spacebar))
+
+                                                    The default port for a server is 26000 (UDP)
+
+**Notes
+
+Archaic firearms (matchlocks, muskets) and munitions (charbelcher) are susceptible to enviromental factors.
+They will fail to fire if immersed in water or subject to excessive deluge. Take care to keep them dry.

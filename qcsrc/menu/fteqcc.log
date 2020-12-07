@@ -1,0 +1,47 @@
+Source file: progs.src
+outputfile: ../../menu.dat
+compiling sys-pre.qh
+compiling ../dpdefs/menudefs.qc
+compiling ../dpdefs/keycodes.qc
+compiling sys-post.qh
+compiling config.qh
+compiling ../common/util-pre.qh
+compiling ../warpzonelib/mathlib.qh
+compiling ../common/util.qh
+compiling oo/base.h
+compiling ../common/constants.qh
+compiling ../common/mapinfo.qh
+compiling ../common/campaign_common.qh
+compiling ../common/items.qh
+compiling ../common/command/markup.qh
+compiling ../common/command/rpn.qh
+compiling ../common/command/generic.qh
+compiling ../common/command/shared_defs.qh
+compiling ../common/urllib.qh
+compiling command/menu_cmd.qh
+compiling menu.qh
+compiling draw.qh
+compiling skin.qh
+compiling xonotic/util.qh
+compiling oo/interface.h
+compiling classes.c
+compiling oo/implementation.h
+compiling classes.c
+compiling ../common/util.qc
+compiling ../common/command/markup.qc
+compiling ../common/command/rpn.qc
+compiling ../common/command/generic.qc
+compiling command/menu_cmd.qc
+compiling menu.qc
+compiling draw.qc
+compiling xonotic/util.qc
+compiling ../common/campaign_file.qc
+compiling ../common/campaign_setup.qc
+compiling ../common/mapinfo.qc
+compiling ../common/items.qc
+compiling ../common/urllib.qc
+compiling ../warpzonelib/mathlib.qc
+compiling ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
+Progs should run on any Quake executor
+Not writing linenumbers file due to conflicting optimisation
+0 warnings

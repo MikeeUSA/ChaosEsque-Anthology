@@ -1,0 +1,69 @@
+Vehicles and Monsters that use .iqm files work fine on the version of darkplaces
+that chaosesque is written for (which has been branched off since then and
+maintained for important fixes (source is in a zip file on the .iso))
+
+Newer darkplaces engines may have problems with them, but that is an issue
+with the newer code. ChaosEsque will continue to use the version of the engine
+it was written for.
+
+
+<oftc-webi> I've tried
+<oftc-webi> difficult to export via blender
+<oftc-webi> all the sources are available on the git repo, I make sure of that
+<oftc-webi> code sources are included in the .iso (and map sources), but it would be too big to include al the media sources
+<oftc-webi> Mario lordhavoc or divverent did fix the invisible iqm bug at one time when I reported it a year ago
+<oftc-webi> that fix may have been reverted
+<oftc-webi> also I keep to an older branch of dp because newwer ones don't work as well on intel gfx chipsets
+<oftc-webi> problems with reflecting water etc arrise on newer ones
+<oftc-webi> it may be faster, but I think it's only for nvidia and radiant really
+<Mario> dropping some of the stock xonotic maps would help with the file size
+<Mario> maps like lightspeed are just deadweight
+<oftc-webi> not by much at all
+<oftc-webi> most of the iso is textures
+<oftc-webi> (as for most games)
+<oftc-webi> the .bsp and .maps compressed are tiny in comparrison
+<oftc-webi> but hey, maybe soon we'll have blueray
+<oftc-webi> your code is all GPL right?
+<Mario> indeed
+<oftc-webi> I've added alot of monsters using your monster code
+<oftc-webi> skeletons all that stuff
+<oftc-webi> and extended your zombie apocolypse mutator alot to support the added monsters
+<oftc-webi> my added code ofcourse is very... procedural and sucky (if thens), like a beginner C, but ohwell
+<Mario> if only you'd waited a little longer... the final product is much cleaner
+<oftc-webi> I might beable to backport some things.
+<oftc-webi> features etc
+<oftc-webi> it would have been ruined by my extentions anyway
+<oftc-webi> I'm not a good coder
+<oftc-webi> but I test alot to make up for that
+<oftc-webi> every hr of coding seems to get 2 hrs of testing every which way
+<oftc-webi> I fixed some crashing bugs in the QC in various areas of xonotic.
+<oftc-webi> over the year or 2
+<Mario> i was able to get 2 of your vehicles working partially in the latest code
+<Mario> but, the tags were lost, so it wasnt that great
+<Mario> https://dl.dropboxusercontent.com/u/48965095/xonotic20140204171443-00.jpg
+<Mario> https://dl.dropboxusercontent.com/u/48965095/xonotic20140204172614-00.jpg
+<oftc-webi> here are the model sources:
+<Mario> ive got the sources from the git
+<oftc-webi> http://chaosesqueanthology.git.sourceforge.net/git/gitweb.cgi?p=chaosesqueanthology/mediasource;a=tree
+<oftc-webi> The bones for the tags are often on a different layer in blender
+<oftc-webi> and I often make various LOD meshes
+<oftc-webi> (thus the tags/bones in diff layer)
+<oftc-webi> for some models I have a readme that explains it
+<oftc-webi> (t27 tank etc)
+<oftc-webi> everything works if using the dp version in the iso (comes with source in a .zip file) and the code there
+<Mario> problem with that version is, it lacks r_glsl_skeletal
+<oftc-webi> over the years I've learned you have to package everything you can with whatever you make, otherwise it work work in a year or 2
+<oftc-webi> Mario yea, that made the iqms dissappear for a few months
+<oftc-webi> then divverent fixed the iqm problem
+<oftc-webi> when I found the commit that broke them
+<oftc-webi> I don't know what the state of dp is now, but it was fixed for abit atleast
+<oftc-webi> I maintain a code branch that supports divvrerents "bend all the way down" playermodels too:
+<Mario> if it was fixed, then there must be a commit somewhere that shows exactly what was changed to break it
+<oftc-webi> http://chaosesqueanthology.git.sourceforge.net/git/gitweb.cgi?p=chaosesqueanthology/unstable-xonotic-data;a=summary
+<oftc-webi> Mario: yea, there is a tracker post I made at some point that found the break
+<oftc-webi> wonder what name I used...
+<oftc-webi> here it is"
+<oftc-webi> http://pastebin.com/4JZrNqxM
+<oftc-webi> found that git output in my notes file
+<oftc-webi> 5c9d806b99ac9ffda51a3815f25be208e5637864 is the bad one
+

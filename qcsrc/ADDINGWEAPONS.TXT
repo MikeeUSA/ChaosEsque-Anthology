@@ -1,0 +1,194 @@
+create server/w_newweapon.qc
+add autocvars to server/autocvars.qh
+
+add to
+server/w_all.qc
+
+Edit:
+
+server/:
+cl_player.qc
+cl_weaponsystem.qc (for melee weapons, for 3rd person swing anim if player model supports it)
+g_damage.qc (same in both branches)
+vehicles/vehicles.qc (same in both branches)
+cheats.qc  (same in both branches) To add per-weapon inventory volume, and other things if medeval weapon of cutting or stabbing
+items.qc  (same in both branches) If Medeval weapon, add to the random replacement subroutine
+
+
+client/:
+waypointsprites.qc
+damage.qc (same in both branches)
+
+menu/:
+dialog_multiplayer_create_startweapons.c
+dialog_multiplayer_create_startweaponsdm.c
+(dialog_multiplayer_create_mutators.c might need some edits sometimes
+as its 3 weaps per line for the arena mutator list).
+
+Then add a picture of it in the gfx/hud/default/weaponbla.tga area
+Oh and don't forget the model in models/weapons/
+(v_bla.md3 g_bla.md3 h_bla.iqm h_bla.iqm.framegroups)
+(can copy the h_* files from another similar weapon)
+(the v_ and g_ file are actually IQMs* of the weapon (view/handheld, and ground))
+*or other file format too, just called .md3
+
+Rules:
+
+the g_ model should be scaled (by you) to 1.6x.
+UNLESS it's a pistol or a medeval/melee weapon, in that case we keep to 1x
+(pistols to make them not seem huge)
+
+
+----------------------------------------------
+Another Explaination
+----------------------------------------------
+
+Adding a new spell:
+server/
+* cheats.qc (go through and see all the references to a spell, there are many areas)
+	    (also make sure to edit the iter+ - code since you added a spell)
+	    (+1 the number there)
+defs.qh   (got to add the variables that say if you have the spell)
+
+Adding a new weapon:
+server/
+cl_players.qc (2 spots to edit to add noblood and nogibs vars)
+* g_damage.qc (1 spot to edit for damage resists (2 spots if bow etc))(if adding a bow, caltrops, crossbow there are 2 spots that need to be edited rather than one)
+* vehicles/vehicles.qc (1 spot to edit to add vehicledamage multiplyer)
+* w_all.qc (1 spot to edit to include w_yournewweapon.qc)
+autocvars.qh (put your variables here: ex: grep weaponname autocvars.qh, then regex weaponname to yournewweapon and paste that in (a good editor is nedit or on windows notepad++)
+cl_weaponsystem.qc (sometimes (when adding melee weapon so 3rd person model will swing it))
+*w_yournewweapon.qc (this is your new weapon you are adding)
+
+Easy way to start on a new weapon, cp w_weaponname.qc w_yournewweapon.qc
+Regex: WEAPONNAME, weaponname, WeaponName, Weaponname, to
+YOURNEWWEAPON, yournewweapon, YourNewWeapon, Yournewweapon
+
+client/
+*damage.qc (2 places to edit usually)
+waypointsprites.qc (2 places to edit)
+
+menu/xonotic/*startweapons* (2 files)
+(sometimes *create_mutator* (1 file) too when you go over the row limit*)
+
+Sometimes when needing to add a new weaponset (every 24 weapons):
+common/items.qh (read common/someinformationabout_items_qh.txt )
+
+Also you need to add some models, here's the easy way:
+(those .md3s are renamed .iqms btw, can be any supported model format
+but must be named .md3)
+datadir/models/weapons/
+g_g3.md3
+h_g3.iqm
+h_g3.iqm.framegroups
+v_g3.md3
+
+g_ = ground model
+v_ = view model
+h_ = holder of view model, and swinging/shooting animations
+this can be copyed from another weapon, it
+sets the place fromwhich the bullets fly.
+
+There's another way, which has to do with animated models, it's
+written about elsewhere. (can check the source server/cl_weap*)
+
+You'll see some weapons with many v_bla models. Those are used for
+primitive code-controlled "animation". See w_longbow.qc etc. Hey, it works.
+
+
+--------------------------
+Example, for adding the microuzi, these files were edited:
+
+/qcsrc/server/autocvars.qh
+*/qcsrc/server/w_microuzi.qc
+*/qcsrc/server/w_all.qc
+/qcsrc/server/cl_player.qc
+*/qcsrc/server/g_damage.qc
+*/qcsrc/server/vehiceles/vehicles.qc
+
+*qcsrc/client/damage.qc
+qcsrc/client/waypointsprites.qc
+
+fastweap.cfg
+
+models/weapons/
+
+gfx/crosshairmicrouzi.tga
+gfx/hud/default/weaponmicrouzi.tga
+
+qcsrc/menu/xonotic/dialog_multiplayer_create_startweapons.c
+qcsrc/menu/xonotic/dialog_multiplayer_create_startweaponsdm.c
+
+
+
+----------------------------------------------------------------------------
+Here is an example of doing some of that from the terminal's perspective
+----------------------------------------------------------------------------
+
+Example of an editing session, here we add a new melee weapon for example:
+Let us say an allready existant similar weapon is "somesimilarweapon"
+(WEP_SOMESIMILARWEAPON)
+(we are in ~/xonotic-concrete/xonotic/data/xonotic-data.pk3dir/qcsrc/server/ )
+qcsrc/server/$ cp w_somesimilarweapon.qc w_mynewweapon.qc
+qcsrc/server/$ nedit w_mynewweapon.qc w_all.qc
+#qcsrc/server/$ git add w_mynewweapon.qc w_all.qc
+#qcsrc/server/$ cp  ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/qcsrc/server/
+
+#Add the autocvars to the file: grep for the similar weap's autocvar, then just replace that string and copy over
+#autocvars.qh is different between branches, thus need to seperatly edit
+qcsrc/server$ grep "somesimilarweapon" autocvars.qh
+qcsrc/server$ nedit autocvars.qh ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/qcsrc/server/autocvars.qh &
+
+
+qcsrc/server/$ nedit t_items.qc cheats.qc g_damage.qc cl_weapons.qc
+#qcsrc/server/$ git add t_items.qc cheats.qc g_damage.qc cl_weapons.qc
+#qcsrc/server/$ cp t_items.qc cheats.qc g_damage.qc cl_weapons.qc ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/qcsrc/server/
+
+qcsrc/server/$ cd vehicles/
+qcsrc/server/vehicles$ nedit vehicles.qc &
+#qcsrc/server/vehicles$ git add vehicles.qc
+#qcsrc/server/vehicles$ cp vehicles.qc ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/qcsrc/server/vehicles/
+qcsrc/server/vehicles$ cd ../
+
+###(These files differ between branches so must edit both individually)
+qcsrc/server$ nedit cl_weaponsystem.qc ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/qcsrc/server/cl_weaponsystem.qc &
+#qcsrc/server$ git add cl_weaponsystem.qc
+
+qcsrc/server$ nedit cl_player.qc ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/qcsrc/server/cl_player.qc &
+#qcsrc/server$ git add cl_player.qc
+
+qcsrc/server$ cd ../client/
+qcsrc/client$ nedit waypointsprites.qc ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/qcsrc/client/waypointsprites.qc &
+#qcsrc/client$ git add waypointsprites.qc
+
+###(Now for copying over the model, we go into a scratch directory first)
+###(And we copy over a model that of a similar weapon, then rename those file)
+###(then we copy over our actual exported iqms. (renamed to md3)
+qcsrc$ cd ../models/weapons/bla/
+models/weapons/bla$ ls
+models/weapons/bla$ cp ../*somesimilarweapon* ./
+models/weapons/bla$ ls
+models/weapons/bla$ rename s/somesimilarweapon/mynewweapon/ ./*
+models/weapons/bla$ cp ~/MyBlenderEditDirectory/g_mynewweapon.iqm ./g_mynewweapon.md3
+models/weapons/bla$ cp ~/MyBlenderEditDirectory/v_mynewweapon.iqm ./v_mynewweapon.md3
+###Move our models up one directory to models/weapons
+models/weapons/bla$ mv ./* ../
+###Follow it with ourselves
+models/weapons/bla$ cd ../
+###Add to git, as always
+#models/weapons$ git add *ynewweapon*
+###Copy over to other branch
+#models/weapons$ cp *ynewweapon* ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/models/weapons/
+
+###Now we add the settings for the weap
+$ nedit fastweap.cfg
+#$ git add fastweap.cfg
+#$ cp fastweap.cfg ~/xonotic-stable/xonotic/data/xonotic-data.pk3dir/
+
+###Commit
+#$ git commit -m "eds"
+
+###Later we go into gfx/hud/default/ and make the weaponmynewweapon.tga
+###(and add to the menu qc aswell)
+
+----------------------------------------------------------------------------

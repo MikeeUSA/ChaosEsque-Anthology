@@ -1,0 +1,15 @@
+qcc looks for progs.src in the current directory.
+to look in a different directory: qcc -src <directory>
+-Fwasm <funcname> causes FTEQCC to dump all asm to qc.asm
+-O0 to disable optimisations
+-O1 to optimise for size
+-O2 to optimise more - some behaviours may change
+-O3 to optimise lots - experimental or non-future-proof
+-Oname to enable an optimisation
+-Ono-name to disable optimisations
+-Kkeyword to activate keyword
+-Kno-keyword to disable keyword
+-Wall to give a stupid number of warnings
+-Ttarget to set a output format
+-Fautoproto to enable automatic prototyping
+-Fsubscope to make locals specific to their subscope

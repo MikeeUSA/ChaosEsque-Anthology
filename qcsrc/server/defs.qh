@@ -1,0 +1,2151 @@
+#define INDEPENDENT_ATTACK_FINISHED
+
+noref float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
+
+#define BUTTON_ATCK       button0
+#define BUTTON_JUMP       button2
+#define BUTTON_ATCK2      button3
+#define BUTTON_ZOOM       button4
+#define BUTTON_CROUCH     button5
+#define BUTTON_HOOK       button6
+#define BUTTON_INFO       button7
+#define BUTTON_CHAT       buttonchat
+#define BUTTON_USE        buttonuse
+#define BUTTON_DRAG       button8
+#define BUTTON_ZOOMSCRIPT button9
+
+// Globals
+
+float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
+float g_warmup_limit;
+float g_warmup_allguns;
+float g_warmup_allow_timeout;
+float g_race_qualifying;
+float inWarmupStage;
+float g_pickup_respawntime_weapon;
+float g_pickup_respawntime_superweapon;
+float g_pickup_respawntime_ammo;
+float g_pickup_respawntime_short;
+float g_pickup_respawntime_medium;
+float g_pickup_respawntime_long;
+float g_pickup_respawntime_powerup;
+float g_pickup_respawntimejitter_weapon;
+float g_pickup_respawntimejitter_superweapon;
+float g_pickup_respawntimejitter_ammo;
+float g_pickup_respawntimejitter_short;
+float g_pickup_respawntimejitter_medium;
+float g_pickup_respawntimejitter_long;
+float g_pickup_respawntimejitter_powerup;
+float g_jetpack;
+
+float g_pickup_respawntime_wealth; //Treasure items like gold crowns, bullion
+float g_pickup_respawntime_coin;
+float g_pickup_respawntime_gem;
+float g_pickup_respawntime_scroll;
+float g_pickup_respawntime_spellbook;
+float g_pickup_respawntime_potion;
+float g_pickup_respawntime_food;
+float g_pickup_respawntime_miscitem;
+
+float sv_clones;
+float sv_gentle;
+float sv_foginterval;
+
+entity	activator;
+
+float player_count;
+float currentbots;
+float bots_would_leave;
+float lms_lowest_lives;
+float lms_next_place;
+float LMS_NewPlayerLives();
+
+void UpdateFrags(entity player, float f);
+.float totalfrags;
+
+float team1_score, team2_score, team3_score, team4_score;
+
+float maxclients;
+
+// Fields
+
+.void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;
+
+//.string	wad;
+//.string	map;
+
+//.float	worldtype;
+.float	delay;
+.float	wait;
+.float	lip;
+//.float	light_lev;
+.float	speed;
+//.float	style;
+//.float	skill;
+.float	sounds;
+//.float  platmovetype;
+.float  oldstyleplatmovetype;
+
+.string killtarget;
+
+.vector	pos1, pos2;
+.vector	mangle;
+
+.float	pain_finished;			//Added by Supajoe
+.float	pain_frame;			//"
+.float	statdraintime;			// record the one-second intervals between draining health and armour when they're over 100
+.float  crouch;	// Crouching or not?
+
+.float	strength_finished;
+.float	invincible_finished;
+.float	superweapons_finished;
+
+.vector		finaldest, finalangle; 		//plat.qc stuff
+.void()		think1;
+.float state;
+.float		t_length, t_width;
+
+.vector destvec;		// for rain
+.vector destvec2;		// for train
+.float cnt;		// for rain
+.float count;
+//.float cnt2;
+
+.float play_time;
+.float respawn_time;
+.float death_time;
+.float fade_time;
+.float fade_rate;
+
+// player animation state
+.float animstate_startframe;
+.float animstate_numframes;
+.float animstate_framerate;
+.float animstate_starttime;
+.float animstate_endtime;
+.float animstate_override;
+.float animstate_looping;
+
+// player animation data for this model
+// each vector is as follows:
+// _x = startframe
+// _y = numframes
+// _z = framerate
+.vector anim_die1; // player dies
+.vector anim_die2; // player dies differently
+.vector anim_draw; // player pulls out a weapon
+// .vector anim_duck; // player crouches (from idle to duckidle)
+.vector anim_duckwalk; // player walking while crouching
+.vector anim_duckjump; // player jumping from a crouch
+.vector anim_duckidle; // player idling while crouching
+.vector anim_idle; // player standing
+.vector anim_jump; // player jump
+.vector anim_pain1; // player flinches from pain
+.vector anim_pain2; // player flinches from pain, differently
+.vector anim_shoot; // player shoots
+.vector anim_taunt; // player taunts others (FIXME: no code references this)
+.vector anim_run; // player running forward
+.vector anim_runbackwards; // player running backward
+.vector anim_strafeleft; // player shuffling left quickly
+.vector anim_straferight; // player shuffling right quickly
+//.vector anim_dead1; // player dead (must be identical to last frame of die1)
+//.vector anim_dead2; // player dead (must be identical to last frame of die2)
+.vector anim_forwardright; // player running forward and right
+.vector anim_forwardleft; // player running forward and left
+.vector anim_backright; // player running backward and right
+.vector anim_backleft; // player running back and left
+.vector anim_melee; // player doing the melee action
+.vector anim_duck; // player doing the melee action
+.vector anim_duckwalkbackwards;
+.vector anim_duckwalkstrafeleft;
+.vector anim_duckwalkstraferight;
+.vector anim_duckwalkforwardright;
+.vector anim_duckwalkforwardleft;
+.vector anim_duckwalkbackright;
+.vector anim_duckwalkbackleft;
+
+// weapon animation vectors:
+.vector anim_fire1;
+.vector anim_fire2;
+.vector anim_idle;
+.vector anim_reload;
+
+void() player_setupanimsformodel;
+void setanim(entity e, vector anim, float looping, float override, float restart);
+
+.string mdl;
+
+.string playermodel;
+.string playerskin;
+
+.string getbone_phal; //To know what bone to connect body_phal to, if applicable. Set in playermodel.txt
+.float getbone_phal_setpos; //If we should set
+.float getbone_phal_setangle; //If we should set
+.float getbone_phal_posx;  //Normal
+.float getbone_phal_posy;
+.float getbone_phal_posz;
+.float getbone_phal_pos2x; //For if cut
+.float getbone_phal_pos2y;
+.float getbone_phal_pos2z;
+.float getbone_phal_anglex;
+.float getbone_phal_angley;
+.float getbone_phal_anglez;
+.float species;
+.float skincolor;
+.float sex;
+.float age;
+.float plweight;
+.float stoneskin;
+.float realskin;
+
+.float	respawntime;
+.float	respawntimejitter;
+//.float	chasecam;
+
+.float	damageforcescale;
+#define MIN_DAMAGEEXTRARADIUS 2
+#define MAX_DAMAGEEXTRARADIUS 16
+.float damageextraradius;
+
+//.float          gravity;
+
+.float		dmg;
+
+// for railgun damage (hitting multiple enemies)
+.float railgunhit;
+.float railgunhitsolidbackup;
+.vector railgunhitloc;
+
+.float		air_finished;
+.float		dmgtime;
+
+.float		killcount;
+.float hitsound, typehitsound;
+
+.float watersound_finished;
+.float iscreature;
+.float damagedbycontents;
+.float damagedbytriggers;
+.float pushable;
+.float teleportable;
+.vector oldvelocity;
+
+.float pauseregen_finished;
+.float pauserothealth_finished;
+.float pauserotarmor_finished;
+.float pauserotmana_finished;
+.float pauserotfuel_finished;
+.string item_pickupsound;
+
+// definitions for weaponsystem
+
+.entity weaponentity;
+.entity exteriorweaponentity;
+.vector weaponentity_glowmod;
+
+//.float weapon; // current weapon
+.float switchweapon; // weapon requested to switch to
+.float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+.string weaponname; // name of .weapon
+
+.float autoswitch;
+float weapon_action(float wpn, float wrequest);
+float client_hasweapon(entity cl, float wpn, float andammo, float complain);
+void w_clear();
+void w_ready();
+// VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
+.float weapon_nextthink;
+.void() weapon_think;
+
+//float	PLAYER_WEAPONSELECTION_DELAY = );
+float	PLAYER_WEAPONSELECTION_SPEED = 18;
+vector	PLAYER_WEAPONSELECTION_RANGE = '0 20 -40';
+
+// weapon states (self.weaponentity.state)
+float WS_CLEAR			= 0; // no weapon selected
+float WS_RAISE			= 1; // raise frame
+float WS_DROP			= 2; // deselecting frame
+float WS_INUSE			= 3; // fire state
+float WS_READY			= 4; // idle frame
+
+// there is 2 weapon tics that can run in one server frame
+#define W_TICSPERFRAME 2
+
+void weapon_defaultspawnfunc(float wpn);
+
+string w_deathtypestring;
+
+.vector dest1, dest2;
+
+float gameover;
+float intermission_running;
+float intermission_exittime;
+float alreadychangedlevel;
+
+
+.float runes;
+
+// Keys player is holding
+.float itemkeys;
+// message delay for func_door locked by keys and key locks
+// this field is used on player entities
+.float key_door_messagetime;
+
+
+.float version;
+
+// Laser target for laser-guided weapons
+.entity lasertarget;
+.float laser_on;
+.float laser_alpha;
+.float laser_size;
+//.float laser_glowcolor;
+//.vector laser_color; //Didn't work, only red, did x y z seperatly too
+
+//swamp
+.float in_swamp;              // bool
+.entity swampslug;            // Uses this to release from swamp ("untouch" fix)
+
+// footstep interval
+.float nextstep;
+
+float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
+.float spectatortime; //point in time since the client is spectating or observing
+void checkSpectatorBlock();
+
+float game_completion_ratio; // 0 at start, 1 near end
+.float winning;
+.float jointime; // time of joining
+.float alivetime; // time of being alive
+
+float nJoinAllowed(entity ignore);
+#define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
+
+.float spawnshieldtime;
+
+.float lms_nextcheck;
+.float lms_traveled_distance;
+
+.entity flagcarried;
+
+.entity lastrocket;
+
+.float playerid;
+float playerid_last;
+.float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
+
+.vector spawnorigin;
+
+.vector death_origin;
+.vector killer_origin;
+
+float default_player_alpha;
+float default_weapon_alpha;
+
+.float() customizeentityforclient;
+.float cvar_cl_handicap;
+.float cvar_cl_clippedspectating;
+.float cvar_cl_autoscreenshot;
+.float cvar_cl_movement_track_canjump;
+.float cvar_cl_newusekeysupported;
+
+.string cvar_g_xonoticversion;
+.string cvar_cl_weaponpriority;
+.string cvar_cl_weaponpriorities[10];
+#ifdef ALLOW_FORCEMODELS
+.float cvar_cl_forceplayermodels;
+.float cvar_cl_forceplayermodelsfromxonotic;
+float sv_clforceplayermodels;
+#endif
+.float cvar_cl_gunalign;
+.float cvar_cl_noantilag;
+
+.string weaponorder_byimpulse;
+
+.float cvar_cl_allow_uid2name;
+.float cvar_cl_allow_uidtracking;
+.string stored_netname;
+
+void Announce(string snd);
+void AnnounceTo(entity e, string snd);
+
+.float version_nagtime;
+
+#define NUM_JUMPPADSUSED 3
+.float jumppadcount;
+.entity jumppadsused[NUM_JUMPPADSUSED];
+
+string gamemode_name;
+
+float startitem_failed;
+
+void DropAllRunes(entity pl);
+
+
+typedef .float floatfield;
+floatfield Item_CounterField(float it);
+
+float W_AmmoItemCode(float wpn);
+string W_Name(float weaponid);
+string W_Apply_Weaponreplace(string in);
+string W_ApplyNo_Weaponreplace(string in);
+
+void FixIntermissionClient(entity e);
+void FixClientCvars(entity e);
+
+WEPSET_DECLARE_A(weaponsInMap);
+
+.float respawn_countdown; // next number to count
+
+float bot_waypoints_for_items;
+
+.float attack_finished_for[WEP_MAXCOUNT];
+.float attack_finished_single;
+#ifdef INDEPENDENT_ATTACK_FINISHED
+#define ATTACK_FINISHED_FOR(ent,w) ((ent).(attack_finished_for[(w) - WEP_FIRST]))
+#else
+#define ATTACK_FINISHED_FOR(ent,w) ((ent).attack_finished_single)
+#endif
+#define ATTACK_FINISHED(ent) ATTACK_FINISHED_FOR(ent,(ent).weapon)
+
+// assault game mode: Which team is attacking in this round?
+float assault_attacker_team;
+
+// speedrun: when 1, player auto teleports back when capture timeout happens
+.float speedrunning;
+
+// database
+float ServerProgsDB;
+float TemporaryDB;
+
+.float team_saved;
+
+float some_spawn_has_been_used;
+float have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
+float have_team_spawns_forteam[17]; // 0 = this team has no spawns, 1 = this team has spawns; team 0 is the "no-team"
+
+// set when showing a kill countdown
+.entity killindicator;
+.float killindicator_teamchange;
+
+void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+
+float lockteams;
+
+.float parm_idlesince;
+float sv_maxidle;
+float sv_maxidle_spectatorsareidle;
+
+float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
+
+float next_pingtime;
+
+.float Version;
+.float SendFlags;
+.float(entity to, float sendflags) SendEntity;
+
+// player sounds, voice messages
+// TODO implemented fall and falling
+#define ALLPLAYERSOUNDS \
+		_VOICEMSG(death) \
+		_VOICEMSG(drown) \
+		_VOICEMSG(fall) \
+		_VOICEMSG(fall) \
+		_VOICEMSG(falling) \
+		_VOICEMSG(gasp) \
+		_VOICEMSG(jump) \
+		_VOICEMSG(pain100) \
+		_VOICEMSG(pain25) \
+		_VOICEMSG(pain50) \
+		_VOICEMSG(pain75)
+
+#define ALLVOICEMSGS \
+		_VOICEMSG(attack) \
+		_VOICEMSG(attackinfive) \
+		_VOICEMSG(coverme) \
+		_VOICEMSG(defend) \
+		_VOICEMSG(freelance) \
+		_VOICEMSG(incoming) \
+		_VOICEMSG(meet) \
+		_VOICEMSG(needhelp) \
+		_VOICEMSG(seenflag) \
+		_VOICEMSG(taunt) \
+		_VOICEMSG(teamshoot)
+
+#define _VOICEMSG(m) .string playersound_##m;
+ALLPLAYERSOUNDS
+ALLVOICEMSGS
+#undef _VOICEMSG
+
+// reserved sound names for the future (some models lack sounds for them):
+//		_VOICEMSG(flagcarriertakingdamage) \
+//		_VOICEMSG(getflag) \
+// reserved sound names for the future (ALL models lack sounds for them):
+//		_VOICEMSG(affirmative) \
+//		_VOICEMSG(attacking) \
+//		_VOICEMSG(defending) \
+//		_VOICEMSG(roaming) \
+//		_VOICEMSG(onmyway) \
+//		_VOICEMSG(droppedflag) \
+//		_VOICEMSG(negative) \
+//		_VOICEMSG(seenenemy) \
+
+string globalsound_fall;
+string globalsound_metalfall;
+string globalsound_step;
+string globalsound_metalstep;
+
+#define VOICETYPE_PLAYERSOUND 10
+#define VOICETYPE_TEAMRADIO 11
+#define VOICETYPE_LASTATTACKER 12
+#define VOICETYPE_LASTATTACKER_ONLY 13
+#define VOICETYPE_AUTOTAUNT 14
+#define VOICETYPE_TAUNT 15
+
+void PrecachePlayerSounds(string f);
+void PrecacheGlobalSound(string samplestring);
+void UpdatePlayerSounds();
+void ClearPlayerSounds();
+void PlayerSound(.string samplefield, float channel, float voicetype);
+void GlobalSound(string samplestring, float channel, float voicetype);
+void FakeGlobalSound(string samplestring, float channel, float voicetype);
+void VoiceMessage(string type, string message);
+float GetPlayerSoundSampleField_notFound;
+.string GetVoiceMessageSampleField(string type);
+
+// autotaunt system
+.float cvar_cl_autotaunt;
+.float cvar_cl_voice_directional;
+.float cvar_cl_voice_directional_taunt_attenuation;
+
+.float version_mismatch;
+
+float independent_players;
+#define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
+#define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
+#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER) + ((e).frags = FRAGS_PLAYER_NONSOLID))
+// we're using + here instead of , because fteqcc sucks
+
+string clientstuff;
+.float phase;
+.float pressedkeys;
+
+.float porto_forbidden;
+
+.string fog;
+
+string cvar_changes;
+string cvar_purechanges;
+float cvar_purechanges_count;
+
+float game_starttime; //point in time when the countdown is over
+.float stat_game_starttime;
+
+.float stat_sv_airaccel_qw;
+.float stat_sv_airstrafeaccel_qw;
+.float stat_sv_airspeedlimit_nonqw;
+.float stat_sv_maxspeed;
+
+void W_Porto_Remove (entity p);
+
+.float projectiledeathtype;
+
+.string message2;
+
+vector railgun_start, railgun_end; // filled by FireRailgunBullet, used by damage code for head shot
+.float stat_allow_oldnexbeam;
+
+// reset to 0 on weapon switch
+// may be useful to all weapons
+.float bulletcounter;
+
+void target_voicescript_next(entity pl);
+void target_voicescript_clear(entity pl);
+
+.string target2;
+.string target3;
+.string target4;
+.float target_random;
+.float trigger_reverse;
+
+// Nexball 
+.entity ballcarried; // Also used for keepaway
+.float metertime;
+float g_nexball_meter_period;
+
+void SUB_DontUseTargets();
+void SUB_UseTargets();
+
+.void() reset; // if set, an entity is reset using this
+.void() reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
+
+void ClientData_Touch(entity e);
+
+//vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
+
+.float wasplayer;
+
+float servertime, serverprevtime, serverframetime;
+
+.entity soundentity;
+
+.float ammo_fuel;
+
+.vector prevorigin;
+
+//flood fields
+.float nickspamtime; // time of last nick change
+.float nickspamcount;
+.float floodcontrol_chat;
+.float floodcontrol_chatteam;
+.float floodcontrol_chattell;
+.float floodcontrol_voice;
+.float floodcontrol_voiceteam;
+
+.float stat_shotorg; // networked stat for trueaim HUD
+
+string matchid;
+.float hitplotfh;
+
+.float last_pickup;
+
+.float hit_time; 
+.float typehit_time; 
+
+.float stat_leadlimit;
+
+float radar_showennemies;
+
+#ifdef PROFILING
+float client_cefc_accumulator;
+float client_cefc_accumulatortime;
+#endif
+
+..float current_ammo;
+
+.float weapon_load[WEP_MAXCOUNT];
+.float ammo_none; // used by the reloading system, must always be 0
+.float clip_load;
+.float old_clip_load;
+.float clip_size;
+.float minelayer_mines;
+.float nukelayer_nukes;
+
+//Customize nukes
+.float nukelayer_damage;
+.float nukelayer_damageforcescale;
+.float nukelayer_edgedamage;
+.float nukelayer_radius;
+.float nukelayer_force;
+.float nukelayer_fire0_damage;
+.float nukelayer_fire0_burntime;
+.float nukelayer_fire0_radius;
+.float nukelayer_fire1_damage;
+.float nukelayer_fire1_burntime;
+.float nukelayer_fire1_radius;
+.float nukelayer_fire2_damage;
+.float nukelayer_fire2_burntime;
+.float nukelayer_fire2_radius;
+.float nukelayer_fire3_damage;
+.float nukelayer_fire3_burntime;
+.float nukelayer_fire3_radius;
+.float nukelayer_fire4_damage;
+.float nukelayer_fire4_burntime;
+.float nukelayer_fire4_radius;
+.float nukelayer_fire5_damage;
+.float nukelayer_fire5_burntime;
+.float nukelayer_fire5_radius;
+
+
+.float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
+
+#define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
+// when doing this, hagar can go through clones
+// #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
+
+.float spectatee_status;
+.float zoomstate;
+.float bloodloss_timer;
+.float restriction;
+
+.entity clientdata;
+.entity personal;
+
+string deathmessage;
+
+.float just_joined;
+
+.float cvar_cl_accuracy_data_share;
+.float cvar_cl_accuracy_data_receive;
+
+.float cvar_cl_weaponimpulsemode;
+.float selectweapon; // last selected weapon of the player
+
+.float ballistics_density; // wall piercing factor, larger = bullet can pass through more
+
+#define ACTIVE_NOT 		0
+#define ACTIVE_ACTIVE 	1
+#define ACTIVE_IDLE 	2
+#define ACTIVE_BUSY 	2
+#define ACTIVE_TOGGLE	3
+.float active;
+.void (float act_state) setactive;
+.entity realowner;
+
+.float nex_charge;
+.float nex_charge_rottime;
+.float nex_chargepool_ammo;
+
+.float hagar_load;
+
+float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
+
+float serverflags;
+
+.float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
+.float player_blocked;
+
+.float freezetag_frozen;
+.float freezetag_revive_progress;
+
+.float frozen; // for freeze attacks
+.float revive_progress;
+.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+
+.vector stonedorigin;
+.vector stonedangles;
+.float stoned; // for stone curse
+.float strevive_progress;
+.float strevive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+
+.entity muzzle_flash;
+.float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
+
+.float stat_respawn_time; // shows respawn time, and is negative when awaiting respawn
+
+void PlayerUseKey();
+
+typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
+.spawn_evalfunc_t spawn_evalfunc;
+
+.entity conveyor;
+
+string modname;
+
+.float missile_flags;
+#define MIF_SPLASH 2
+#define MIF_ARC 4
+#define MIF_PROXY 8
+#define MIF_GUIDED_MANUAL 16
+#define MIF_GUIDED_HEAT 32
+#define MIF_GUIDED_LASER 64
+#define MIF_GUIDED_AI 128
+#define MIF_GUIDED_TAG 128
+#define MIF_GUIDED_ALL (MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
+#define MIF_GUIDED_TRACKING (MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
+#define MIF_GUIDED_CONFUSABLE (MIF_GUIDED_HEAT | MIF_GUIDED_AI)
+
+#define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? TRUE : FALSE)
+#define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? TRUE : FALSE)
+#define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? TRUE : FALSE)
+
+.string spawnmob;
+.float monster_attack;
+.float monster_demeanor; //4 == won't attack those of 4 above owned by same master, 5 == won't attack any owned by same master
+.float monster_noitemdrop; //Dont drop any items
+.float monster_spclcnsd; //Per-monster settings: Special conciderations, diff for each monster type
+.float monster_jogspeedrate; //How fast vs runspeed is jog speed (should be more than 0, less than 1) (generally the speed at which a marshalable monster will move when ordered)
+.float monster_marshalable; //Can this moster be marshaled (usually just ones spawned by buildable buildings)
+.entity monster_marshal; //Who is the marshal of the monster, if anyone
+.float marshalformation; //What type of formation : far, close, etc
+.float marshaldedication; //How hard do you want your soliders to follow
+.float marshalattack; //Has an attack spot been set (rather than center on player)?
+.vector marshalattack_spot; //where to attack
+.float nextcmdaction; //Nexttime you can marshall etc. For "physical" things rather than just spell fatigue (though often there will be both)
+
+float monster_skill;
+float spawncode_first_load; // used to tell the player the monster database is loading (TODO: fix this?)
+
+.entity monster_owner; // new monster owner entity, fixes non-solid monsters
+.float monstercount; // per player monster count
+
+.float stat_monsters_killed; // stats
+.float stat_monsters_total;
+float monsters_total;
+float monsters_killed;
+void monsters_setstatus(); // monsters.qc
+string monsterlist();
+
+.entity melee_temp; //So others can know the entity used for meleethink
+.float melee_temp_starttime;
+.float melee_temp_endtime;
+.float melee_temp_class; //0,1=small(knife,shackles,flashlight),2=lightclub(torch),3=light(rapier),4=medium(sword),5=heavy(axe,hammer)
+.float meleeotherpassesthrough; //for when one blocks another but the other doesn't block the one (think flail deflecting over)
+
+//Resistances to damage
+.float resist_acid;   //Slime
+.float resist_blunt;  //Warhammer, beatdown, melee
+.float resist_bullet;
+.float resist_crush;  //Vehicle crush
+.float resist_edged;  //Axe, Sword, Claw
+.float resist_electricity; //Lightning gun, Tesla arc, 
+.float resist_energy; //Nex, Electro, Crylink, Wakigun, Bumbgun, Wakigun, "laser" gun, hlac
+.float resist_explode;//Rockets etc
+.float resist_fall;   //Shooting star, fall etc
+.float resist_fire;   //Fire, Lava
+.float resist_laser;  //Laser
+.float resist_nuke;  //Nuclear explosion
+.float resist_pierce; //Crossbow, Bite
+.float resist_sound; //Tuba
+.float resist_ice; //Freeze damage resistance
+.float resist_rotor; //Helicopter/Aero-plane Rotor blades damage resistance, Special, evaluated before crush
+.float resist_holybolt; //Resist holybolt type damage (usually only affects undead, here for completeness)
+.float vuln_isundead; //Is the monster/etc undead and thus suceptable to holybolt etc? To what degree?
+.float vuln_beam_ignite; //Dmg rate at which a laser or lightsabre will ignite self (if monster has full fire resist, won't be such a vuln) (This is different from the rest as it does not use a 0 to 1 multiplicative scale, instead you specify the instantanious dmg that will ignight)
+.float vuln_movement_imparable; //Dmg to lowerbody, legs, can slow this entity
+.float buff_wont_ignite; //Entity won't ignite if hit by Fire_AddDamage
+.float buff_cancellation_immune; //Cancellation won't nullify this entity's spells (rate: 0 to 1)
+
+.float mana;
+.float max_mana;
+.float nextspell; //Time untill you can cast another spell
+
+
+//Spells and exp for spells
+.float spell_agency; //Switch place with someone
+.float exp_spell_agency; //Counter to next lvl, once achieve is zeroed again.
+.float start_spell_agency; //If we started with a spell and thus should remove those levels on death/teamchange/etc
+
+.float spell_death; //Level you know the spell at (or none)
+.float exp_spell_death;
+.float start_spell_death; 
+
+.float spell_drainlife; //Vampire some life
+.float exp_spell_drainlife;
+.float start_spell_drainlife;
+
+.float spell_cancellation; 
+.float exp_spell_cancellation;
+.float start_spell_cancellation;
+
+.float spell_castfromlife; //Use health as mana
+.float exp_spell_castfromlife;
+.float start_spell_castfromlife;
+
+.float spell_confer; //Trade health total
+.float exp_spell_confer;
+.float start_spell_confer; 
+
+.float spell_iceball; //Level you know the spell at (or none)
+.float exp_spell_iceball;
+.float start_spell_iceball;
+
+.float spell_icestar;
+.float exp_spell_icestar;
+.float start_spell_icestar;
+
+.float spell_firebolt; //Level you know the spell at (or none)
+.float exp_spell_firebolt;
+.float start_spell_firebolt; 
+
+.float spell_fireball; //Level you know the spell at (or none)
+.float exp_spell_fireball;
+.float start_spell_fireball;  
+
+.float spell_magmasphere; //Level you know the spell at (or none)
+.float exp_spell_magmasphere;
+.float start_spell_magmasphere; 
+
+.float spell_firebeam; //Level you know the spell at (or none)
+.float exp_spell_firebeam;
+.float start_spell_firebeam;
+
+.float spell_inferno; //Level you know the spell at (or none)
+.float exp_spell_inferno;
+.float start_spell_inferno;  
+
+.float spell_firewall; //A wall of fire
+.float exp_spell_firewall;
+.float start_spell_firewall;
+
+.float spell_scepterofflame; //
+.float exp_spell_scepterofflame;
+.float start_spell_scepterofflame;
+
+.float spell_explosion; //
+.float exp_spell_explosion;
+.float start_spell_explosion;
+
+.float spell_phantasmalbarrier; //A phantasmal barrier (wall)
+.float exp_spell_phantasmalbarrier;
+.float start_spell_phantasmalbarrier;
+
+.float spell_raiseundead; //
+.float exp_spell_raiseundead;
+.float start_spell_raiseundead;
+
+.float spell_flameburst; //Fire in all directions
+.float exp_spell_flameburst;
+.float start_spell_flameburst;
+
+.float spell_firecentury; //Fire in all directions, column
+.float exp_spell_firecentury;
+.float start_spell_firecentury;
+
+.float spell_frostbeam; //Level you know the spell at (or none)
+.float exp_spell_frostbeam;
+.float start_spell_frostbeam; 
+
+.float spell_grace; //Level you know the spell at (or none)
+.float exp_spell_grace;
+.float start_spell_grace;
+
+.float spell_holybolt; //Level you know the spell at (or none)
+.float exp_spell_holybolt;
+.float start_spell_holybolt;
+
+.float spell_holylight; //Level you know the spell at (or none)
+.float exp_spell_holylight;
+.float start_spell_holylight;
+
+.float spell_acervilux; //Level you know the spell at (or none)
+.float exp_spell_acervilux;
+.float start_spell_acervilux;
+
+.float spell_heal; //Level you know the spell at (or none)
+.float exp_spell_heal;
+.float start_spell_heal;
+
+.float spell_repair; //Level you know the spell at (or none)
+.float exp_spell_repair;
+.float start_spell_repair;
+
+.float spell_holyword; //Level you know the spell at (or none)
+.float exp_spell_holyword;
+.float start_spell_holyword;
+
+.float spell_extinguish; //Level you know the spell at (or none)
+.float exp_spell_extinguish;
+.float start_spell_extinguish;
+
+.float spell_darkritual; //Level you know the spell at (or none)
+.float exp_spell_darkritual;
+.float start_spell_darkritual;
+
+.float spell_lightining; //Level you know the spell at (or none)
+.float exp_spell_lightining;
+.float start_spell_lightining;
+
+.float spell_chainlightining; //Level you know the spell at (or none)
+.float exp_spell_chainlightining;
+.float start_spell_chainlightining;
+
+.float spell_balllightining; //Level you know the spell at (or none)
+.float exp_spell_balllightining;
+.float start_spell_balllightining;
+
+.float spell_chargedbolt; //Level you know the spell at (or none)
+.float exp_spell_chargedbolt;
+.float start_spell_chargedbolt;
+
+.float spell_lightiningburst; //Level you know the spell at (or none)
+.float exp_spell_lightiningburst;
+.float start_spell_lightiningburst;
+
+.float spell_lightiningstrike; //Level you know the spell at (or none)
+.float exp_spell_lightiningstrike;
+.float start_spell_lightiningstrike;
+
+.float spell_lightiningwall; //Level you know the spell at (or none)
+.float exp_spell_lightiningwall;
+.float start_spell_lightiningwall;
+
+.float spell_monstertomonolith;
+.float exp_spell_monstertomonolith;
+.float start_spell_monstertomonolith;
+
+.float spell_monstertomouse;
+.float exp_spell_monstertomouse;
+.float start_spell_monstertomouse;
+
+.float spell_magicbullets; //Level you know the spell at (or none)
+.float exp_spell_magicbullets;
+.float start_spell_magicbullets; 
+
+.float spell_magicmissile; //Level you know the spell at (or none)
+.float exp_spell_magicmissile;
+.float start_spell_magicmissile; 
+
+.float spell_manashield;	//A mana shield
+.float exp_spell_manashield;
+.float start_spell_manashield; 
+
+.float spell_clairvoyance;
+.float exp_spell_clairvoyance;
+.float start_spell_clairvoyance;
+
+.float spell_meteor;
+.float exp_spell_meteor;
+.float start_spell_meteor;
+
+.float spell_meteorshower;
+.float exp_spell_meteorshower;
+.float start_spell_meteorshower;
+
+.float spell_mimic;	//Change model to the others
+.float exp_spell_mimic;
+.float start_spell_mimic;
+
+.float spell_aquacaelestis;	//Rain
+.float exp_spell_aquacaelestis;
+.float start_spell_aquacaelestis;
+
+.float spell_nivosus;	//Snow
+.float exp_spell_nivosus;
+.float start_spell_nivosus;
+
+.float spell_rosa;	//rose (petals)
+.float exp_spell_rosa;
+.float start_spell_rosa;
+
+.float spell_corvuspenna;	//raven (feather, wing)
+.float exp_spell_corvuspenna;
+.float start_spell_corvuspenna;
+
+.float spell_plumosus;	//(feathered)
+.float exp_spell_plumosus;
+.float start_spell_plumosus;
+
+.float spell_paralyse; //Level you know the spell at (or none)
+.float exp_spell_paralyse;
+.float start_spell_paralyse; 
+
+.float spell_ringoffire; //A ring of fire
+.float exp_spell_ringoffire;
+.float start_spell_ringoffire;
+
+.float spell_stonecurse; //Level you know the spell at (or none)
+.float exp_spell_stonecurse;
+.float start_spell_stonecurse; 
+
+.float spell_stonerain; //Level you know the spell at (or none)
+.float exp_spell_stonerain;
+.float start_spell_stonerain; 
+
+.float spell_timesink; //Level you know the spell at (or none)
+.float exp_spell_timesink;
+.float start_spell_timesink; 
+
+.float spell_vampyricconduit; //Level you know the spell at (or none)
+.float exp_spell_vampyricconduit;
+.float start_spell_vampyricconduit;
+
+.float knowledge_carpentry; //Basic carpentry etc Level at which you know this skill (or not at all)
+.float start_knowledge_carpentry;
+.float knowledge_mortise;   //Needed for more complex woodworking
+.float start_knowledge_mortise;
+.float knowledge_stonemasonry;
+.float start_knowledge_stonemasonry;
+.float knowledge_ironworking;
+.float start_knowledge_ironworking;
+.float knowledge_arch;      //More for bigger arches rather than just small doorways (which are possibly corbels)
+.float start_knowledge_arch;
+.float knowledge_welding;
+.float start_knowledge_welding;
+.float knowledge_concrete;
+.float start_knowledge_concrete;
+
+.float inv_book_know_carpentry;
+.float inv_book_know_mortise;
+.float inv_book_know_stonemasonry;
+.float inv_book_know_ironworking;
+.float inv_book_know_arch;
+.float inv_book_know_welding;
+.float inv_book_know_concrete;
+
+.float inv_book_agency;
+.float inv_scroll_agency;
+.float inv_book_death;
+.float inv_scroll_death;
+.float inv_book_drainlife;
+.float inv_scroll_drainlife;
+.float inv_book_cancellation;
+.float inv_scroll_cancellation;
+.float inv_book_castfromlife;
+.float inv_scroll_castfromlife;
+.float inv_book_confer;
+.float inv_scroll_confer;
+.float inv_book_iceball;
+.float inv_scroll_iceball;
+.float inv_book_icestar;
+.float inv_scroll_icestar;
+.float inv_book_firebolt;
+.float inv_scroll_firebolt;
+.float inv_book_fireball;
+.float inv_scroll_fireball;
+.float inv_book_magmasphere;
+.float inv_scroll_magmasphere;
+.float inv_book_firebeam;
+.float inv_scroll_firebeam;
+.float inv_book_inferno;
+.float inv_scroll_inferno;
+.float inv_book_firewall;
+.float inv_scroll_firewall;
+.float inv_book_scepterofflame;
+.float inv_scroll_scepterofflame;
+.float inv_book_explosion;
+.float inv_scroll_explosion;
+.float inv_book_phantasmalbarrier;
+.float inv_scroll_phantasmalbarrier;
+.float inv_book_raiseundead;
+.float inv_scroll_raiseundead;
+.float inv_book_flameburst;
+.float inv_scroll_flameburst;
+.float inv_book_firecentury;
+.float inv_scroll_firecentury;
+.float inv_book_frostbeam;
+.float inv_scroll_frostbeam;
+.float inv_book_grace;
+.float inv_scroll_grace;
+.float inv_book_holybolt;
+.float inv_scroll_holybolt;
+.float inv_book_holylight;
+.float inv_scroll_holylight;
+.float inv_book_acervilux;
+.float inv_scroll_acervilux;
+.float inv_book_heal;
+.float inv_scroll_heal;
+.float inv_book_repair;
+.float inv_scroll_repair;
+.float inv_book_holyword;
+.float inv_scroll_holyword;
+.float inv_book_extinguish;
+.float inv_scroll_extinguish;
+.float inv_book_darkritual;
+.float inv_scroll_darkritual;
+.float inv_book_lightining;
+.float inv_scroll_lightining;
+.float inv_book_chainlightining;
+.float inv_scroll_chainlightining;
+.float inv_book_balllightining;
+.float inv_scroll_balllightining;
+.float inv_book_chargedbolt;
+.float inv_scroll_chargedbolt;
+.float inv_book_lightiningburst;
+.float inv_scroll_lightiningburst;
+.float inv_book_lightiningstrike;
+.float inv_scroll_lightiningstrike;
+.float inv_book_lightiningwall;
+.float inv_scroll_lightiningwall;
+.float inv_book_monstertomonolith;
+.float inv_scroll_monstertomonolith;
+.float inv_book_monstertomouse;
+.float inv_scroll_monstertomouse;
+.float inv_book_magicbullets;
+.float inv_scroll_magicbullets;
+.float inv_book_magicmissile;
+.float inv_scroll_magicmissile;
+.float inv_book_meteor;
+.float inv_scroll_meteor;
+.float inv_book_meteorshower;
+.float inv_scroll_meteorshower;
+.float inv_book_mimic;
+.float inv_scroll_mimic;
+.float inv_book_aquacaelestis;
+.float inv_scroll_aquacaelestis;
+.float inv_book_nivosus;
+.float inv_scroll_nivosus;
+.float inv_book_rosa;
+.float inv_scroll_rosa;
+.float inv_book_corvuspenna;
+.float inv_scroll_corvuspenna;
+.float inv_book_plumosus;
+.float inv_scroll_plumosus;
+.float inv_book_manashield;
+.float inv_scroll_manashield;
+.float inv_book_clairvoyance;
+.float inv_scroll_clairvoyance;
+.float inv_book_paralyse;
+.float inv_scroll_paralyse;
+.float inv_book_ringoffire;
+.float inv_scroll_ringoffire;
+.float inv_book_stonecurse;
+.float inv_scroll_stonecurse;
+.float inv_book_stonerain;
+.float inv_scroll_stonerain;
+.float inv_book_timesink;
+.float inv_scroll_timesink;
+.float inv_book_vampyricconduit;
+.float inv_scroll_vampyricconduit;
+
+.float inv_potion_health_small;
+.float inv_potion_health_medium;
+.float inv_potion_health_large;
+.float inv_potion_mana_small;
+.float inv_potion_mana_medium;
+.float inv_potion_mana_large;
+.float inv_potion_rejuv_small;
+.float inv_potion_rejuv_medium;
+.float inv_potion_rejuv_large;
+.float inv_potion_vodka_small;
+.float inv_potion_vodka_medium;
+.float inv_potion_vodka_large;
+.float inv_potion_merlot_small;
+.float inv_potion_merlot_medium;
+.float inv_potion_merlot_large;
+.float inv_potion_ale_small;
+.float inv_potion_ale_medium;
+.float inv_potion_ale_large;
+.float inv_potion_water_small;
+.float inv_potion_water_medium;
+.float inv_potion_water_large;
+.float inv_food_bellpepper;
+.float inv_food_bread;
+.float inv_food_cheeze;
+.float inv_food_garlic;
+.float inv_food_grapes;
+.float inv_food_onion;
+.float inv_food_tomato;
+.float inv_food_turkeyleg;
+.float inv_faeces_small;
+.float inv_faeces_medium;
+.float inv_faeces_large;
+
+.float inv_misc_suppressor45;
+.float inv_misc_suppressormac10;
+.float inv_misc_suppressor9mm;
+.float inv_misc_suppressorrifle;
+.float inv_misc_suppressor5n7mm; //5.7mm pistol suppressor
+.float inv_misc_suppressorpdw;
+
+.float inv_misc_cylinder_r1856; //remington 1856 cylinder
+
+.float inv_misc_mag_ak47_30; //30rnd ak47 mag
+.float inv_misc_exmag_ak47_50; //50rnd ak47 magazine
+.float inv_misc_exmag_ak47_100; //100rnd ak47 magazine
+.float inv_misc_drum_ak47_75; //75rnd ak47 drum
+
+.float inv_misc_mag_ak74_30; //30rnd ak74 mag
+.float inv_misc_exmag_ak74_45; //45rnd ak74 magazine
+
+.float inv_misc_mag_styeraug_30; //30rnd styeraug mag
+.float inv_misc_exmag_styeraug_42; //42rnd styeraug magazine
+
+.float inv_misc_panmag_lewisgun_47; //47rnd lewisgun mag
+.float inv_misc_panmag_lewisgun_97; //92rnd lewisgun magazine
+
+.float inv_misc_mag_bar_20; //20rnd styeraug mag
+.float inv_misc_exmag_bar_40; //40rnd styeraug magazine
+
+.float inv_misc_mag_uzi_20;
+.float inv_misc_mag_uzi_25;
+.float inv_misc_mag_uzi_32; 
+.float inv_misc_exmag_uzi_40; 
+.float inv_misc_exmag_uzi_50; 
+.float inv_misc_drum_uzi_82; 
+.float inv_misc_exmag_uzi_106; 
+
+.float inv_misc_mag_tec9_10;
+.float inv_misc_mag_tec9_20;
+.float inv_misc_mag_tec9_32; 
+.float inv_misc_exmag_tec9_36; 
+.float inv_misc_exmag_tec9_50;
+.float inv_misc_drum_tec9_72; 
+
+.float inv_misc_mag_m16_20;
+.float inv_misc_mag_m16_30; 
+.float inv_misc_betacmag_m16;
+
+.float inv_misc_belt_m249_200;
+
+.float inv_misc_mag_lightpistol;
+.float inv_misc_exmag_lightpistol; 
+.float inv_misc_drum_lightpistol;
+.float inv_misc_betacmag_lightpistol;
+
+.float inv_misc_tinymag_pdw;
+.float inv_misc_smallmag_pdw;
+.float inv_misc_stdmag_pdw;
+.float inv_misc_exmag40_pdw; 
+.float inv_misc_drum_pdw;
+.float inv_misc_betacmag_pdw;
+
+.float inv_coin_tin;
+.float inv_coin_iron;
+.float inv_coin_bronze;
+.float inv_coin_copper;
+.float inv_coin_silver;
+.float inv_coin_gold;
+.float inv_coin_plat;
+.float inv_coin_jade;
+.float inv_coin_amberium;
+
+.float inv_coin; //Catchall for coin items on the ground to make it easier for mappers
+
+//counterfeit coins
+.float inv_coin_f_tin;
+.float inv_coin_f_iron;
+.float inv_coin_f_bronze;
+.float inv_coin_f_copper;
+.float inv_coin_f_silver;
+.float inv_coin_f_gold;
+.float inv_coin_f_plat;
+.float inv_coin_f_jade;
+.float inv_coin_f_amberium;
+
+//blatant/old counterfeit coins (cladding rubbing off, exposing inner metal, old)
+.float inv_coin_cf_tin;
+.float inv_coin_cf_iron;
+.float inv_coin_cf_bronze;
+.float inv_coin_cf_copper;
+.float inv_coin_cf_silver;
+.float inv_coin_cf_gold;
+.float inv_coin_cf_plat;
+.float inv_coin_cf_jade;
+.float inv_coin_cf_amberium;
+
+//Casino tokens, no "intrinsic" value, but here are some cfextended suggestions
+.float inv_casinotoken_yellow;    //maybe:   10 Plat
+.float inv_casinotoken_blue;      //perhaps: 20 Plat
+.float inv_casinotoken_gray;      //maybe:   35 Plat
+.float inv_casinotoken_lightgreen;//maybe:   50 Plat
+.float inv_casinotoken_lightblue; //maybe:   75 Plat
+.float inv_casinotoken_rose;      //maybe:   100 Plat
+.float inv_casinotoken_black;     //maybe:   150 Plat
+.float inv_casinotoken_seabreeze; //maybe:   200 Plat
+.float inv_casinotoken_red;       //perhaps: 400 Plat (20*20)
+.float inv_casinotoken_cyan;      //perhaps: 8000 Plat (400*20)
+.float inv_casinotoken_tan;       //perhaps: 160000 Plat (8000*20)
+.float inv_casinotoken_green;     //perhaps: 3200000 Plat (160000*20)
+.float inv_casinotoken_purple;    //perhaps: 64000000 Plat (3200000*20)
+
+.float inv_bar_tin;
+.float inv_bar_iron;
+.float inv_bar_bronze;
+.float inv_bar_copper;
+.float inv_bar_silver;
+.float inv_bar_gold;
+.float inv_bar_plat;
+.float inv_bar_jade;
+.float inv_bar_amberium;
+
+//Faux
+.float inv_bar_f_tin;
+.float inv_bar_f_iron;
+.float inv_bar_f_bronze;
+.float inv_bar_f_copper;
+.float inv_bar_f_silver;
+.float inv_bar_f_gold;
+.float inv_bar_f_plat;
+.float inv_bar_f_jade;
+.float inv_bar_f_amberium;
+
+.float inv_bar; //Catchall
+
+//dia
+.float inv_gem_diamond;
+.float inv_gem_jacinth;
+
+//rb
+.float inv_gem_ruby;
+
+//peri
+.float inv_gem_peridot;
+
+//em
+.float inv_gem_emerald;
+.float inv_gem_topaz;
+
+//saph
+.float inv_gem_sapphire;
+.float inv_gem_chalcedony;
+.float inv_gem_agate;
+.float inv_gem_onyx;
+.float inv_gem_mithril;
+
+//hex
+.float inv_gem_amethyst;
+.float inv_gem_chrysoberyl;
+.float inv_gem_aquamarine;
+.float inv_gem_quartz;
+.float inv_gem_tourmaline;
+
+.float inv_gem_pearl;
+.float inv_gem_blackpearl;
+
+//glass
+.float inv_gem_glass_r;
+.float inv_gem_glass_g;
+.float inv_gem_glass_b;
+.float inv_gem_glass_y;
+.float inv_gem_glass_w;
+
+//faux(cut glass) uses colormap
+//dia
+.float inv_gem_f_diamond;
+.float inv_gem_f_jacinth;
+
+//rb
+.float inv_gem_f_ruby;
+
+//peri
+.float inv_gem_f_peridot;
+
+//em
+.float inv_gem_f_emerald;
+.float inv_gem_f_topaz;
+
+//saph
+.float inv_gem_f_sapphire;
+.float inv_gem_f_chalcedony;
+.float inv_gem_f_agate;
+.float inv_gem_f_onyx;
+.float inv_gem_f_mithril;
+
+//hex
+.float inv_gem_f_amethyst;
+.float inv_gem_f_chrysoberyl;
+.float inv_gem_f_aquamarine;
+.float inv_gem_f_quartz;
+.float inv_gem_f_tourmaline;
+
+.float inv_gem_f_pearl;
+.float inv_gem_f_blackpearl;
+
+.float inv_gem; //Catchall
+
+//contitution
+.float con_alcohol; //fl ounces
+.float con_fiber;
+.float con_protein;
+.float con_starch;
+.float con_sugar;
+.float con_water;
+.float con_filler; //misc food mass
+.float con_kilocalories; //Kilo Calories
+
+.float con_waste_solid; //fl ounces
+.float con_waste_liquid;
+
+.entity body_phal;
+.float body_phal_stat; //0 - norm, 1 enu, 2 cstr, 3, dock
+
+.float smell_acrid; //Like chemically
+.float smell_alcohol;
+.float smell_bodyodor;
+.float smell_cheeze;
+.float smell_earthy;
+.float smell_faeces;
+.float smell_garlic;
+.float smell_urine;
+.float smell_roses;
+.float smell_rottingflesh;
+
+.float nextmetabolize;
+.float nextdrunkadjust;
+
+.float drunken;
+
+.float bodycoretemp;
+.float nextbodycoretempadjust;
+
+.float peaceful;
+.float peacefulselectweapon; //Last selected weapon of the player before going peaceful
+
+.float handcuffed; // = 1/0
+.entity jailor; // = entity;
+.entity jailee; // who you have jailed
+.float prisonerlevel; // 0 1 2 3 //2 = jail, 3 = shackled/torture
+.vector prison1spot; //vector for offset
+.vector prison2spot; //Absolute
+.vector prison3spot; //Absolute
+.vector prison3angles;
+.entity prison3ent; //To follow an ent rather than static spot if desired
+.float prisondamageonrelease; //prison does damage if prisoner is released
+.float prisondamagetypeonrelease; //DMG type
+.float prisonerdamageonrelease; //Applied to the prisoner
+.float prisonerdamagetypeonrelease;
+
+.float prisoner2_suffering; //reset at respawn
+.float prisoner2_sufferingmemory; //doesn't get reset at respawn. but * 0.2 in g_damage.qc for recording
+.float prisoner2_sufferingmemory_lasttime;
+
+.float prisoner3_suffering; //reset at respawn
+.float prisoner3_sufferingmemory; //doesn't get reset at respawn. but * 0.1 in g_damage.qc for recording
+.float prisoner3_sufferingmemory_lasttime;
+
+.float prisonisoffurniture; //Say, a built torture device.
+.entity prisonisoffurniture_owner; //What furnishing is the owner.
+
+.float prisonisfrombuilding;
+.entity prisonisfrombuilding_owner; //What building is the owner.
+
+//If your headshotted but somehow dont die, other affects may occur.
+.float tempdisorientated;
+.float tempdisorientated_time;
+.float tempdisorientated_nexttime;
+.float tempblinded_nexttime;
+.float permblinded;
+.float stat_blinded;
+.float stat_nukeflash;
+.float nukeflash_nexttime;
+.float nukeflash_sendagain; //For g_skycycle stuff
+.float nukeflash_sendagainnexttime; //For g_skycycle stuff
+.float stat_bangflash;
+.float bangflash_nexttime;
+.float permmangled_l; //Left hand mangled
+.float permmangled_r; //Right hand mangled
+.float permhobbled_l; //Left foot hobbled
+.float permhobbled_r; //Right foot hobbled
+.float parthobbledtime; //partially hobbled untill (for if you're only half hobbled (one foot)), applied in cl_physics.qc
+
+.float tempmangled_l; //Left hand mangled
+.float tempmangled_r; //Right hand mangled
+.float temphobbled_l; //Left foot hobbled
+.float temphobbled_r; //Right foot hobbled
+.float tempmanhoblocked; //Set when injured , unset when take health
+.float tempmanhobheal_nexttime; //Set when take health, Time to heal
+
+.float tempmovementimpared;  //Movement impared by "arrow to the knee", or melee attks to lowers etc
+.float tempmvmntimprdlocked; //Set when injured , unset when take health
+.float tempmvmntimprdheal_nexttime; //Set when take health, Time to heal
+
+
+//Global Resources
+float resource_nails_world;
+float resource_rockets_world;
+float resource_cells_world;
+float resource_shells_world;
+float resource_fuel_world;
+float current_crude_world;	
+float capacity_crude_world;	//Max capacity of the oil tanks
+float current_energy_world;
+float capacity_energy_world;	//Max capacity of the energy tanks
+float current_housing_world;
+float capacity_housing_world;	//Max housing capacity
+float current_food_grain_world;
+float current_food_greens_world;
+float current_food_grapes_world;
+float capacity_food_grain_world = 1000;	//Max capacity for grain
+float capacity_food_greens_world = 1000;	//Max capacity for greens
+float capacity_food_grapes_world = 1000;	//Max capacity for grapes
+
+float resource_nails_team1;
+float resource_rockets_team1;
+float resource_cells_team1;
+float resource_shells_team1;
+float resource_fuel_team1;
+float resource_forgeparts_nails_team1;
+float resource_forgeparts_rockets_team1;
+float resource_forgeparts_cells_team1;
+float current_crude_team1;
+float capacity_crude_team1;
+float current_energy_team1;
+float capacity_energy_team1;
+float current_housing_team1;
+float capacity_housing_team1;
+float current_food_grain_team1;
+float current_food_greens_team1;
+float capacity_food_grain_team1 = 1000;	//Max capacity for grain
+float capacity_food_greens_team1 = 1000;	//Max capacity for greens
+
+float resource_nails_team2;
+float resource_rockets_team2;
+float resource_cells_team2;
+float resource_shells_team2;
+float resource_fuel_team2;
+float resource_forgeparts_nails_team2;
+float resource_forgeparts_rockets_team2;
+float resource_forgeparts_cells_team2;
+float current_crude_team2;
+float capacity_crude_team2;
+float current_energy_team2;
+float capacity_energy_team2;
+float current_housing_team2;
+float capacity_housing_team2;
+float current_food_grain_team2;
+float current_food_greens_team2;
+float capacity_food_grain_team2 = 1000;	//Max capacity for grain
+float capacity_food_greens_team2 = 1000;	//Max capacity for greens
+
+float resource_nails_team3;
+float resource_rockets_team3;
+float resource_cells_team3;
+float resource_shells_team3;
+float resource_fuel_team3;
+float resource_forgeparts_nails_team3;
+float resource_forgeparts_rockets_team3;
+float resource_forgeparts_cells_team3;
+float current_crude_team3;
+float capacity_crude_team3;
+float current_energy_team3;
+float capacity_energy_team3;
+float current_housing_team3;
+float capacity_housing_team3;
+float current_food_grain_team3;
+float current_food_greens_team3;
+float capacity_food_grain_team3 = 1000;	//Max capacity for grain
+float capacity_food_greens_team3 = 1000;	//Max capacity for greens
+
+float resource_nails_team4;
+float resource_rockets_team4;
+float resource_cells_team4;
+float resource_shells_team4;
+float resource_fuel_team4;
+float resource_forgeparts_nails_team4;
+float resource_forgeparts_rockets_team4;
+float resource_forgeparts_cells_team4;
+float current_crude_team4;
+float capacity_crude_team4;
+float current_energy_team4;
+float capacity_energy_team4;
+float current_housing_team4;
+float capacity_housing_team4;
+float current_food_grain_team4;
+float current_food_greens_team4;
+float capacity_food_grain_team4 = 1000;	//Max capacity for grain
+float capacity_food_greens_team4 = 1000;	//Max capacity for greens
+
+float current_food_grapes_team1;
+float capacity_food_grapes_team1 = 1000;	//Max capacity for grapes
+float current_food_grapes_team2;
+float capacity_food_grapes_team2 = 1000;	//Max capacity for grapes
+float current_food_grapes_team3;
+float capacity_food_grapes_team3 = 1000;	//Max capacity for grapes
+float current_food_grapes_team4;
+float capacity_food_grapes_team4 = 1000;	//Max capacity for grapes
+
+
+//Local resources, for searching for small local tanks, batteries, etc
+//At first we will just use energy
+.float islocalresourceprovider; //Are we a local resource provider that can be searched for, drawn from, etc
+.float resource_nails_local;
+.float resource_rockets_local;
+.float resource_cells_local;
+.float resource_shells_local;
+.float resource_fuel_local;
+.float resource_forgeparts_nails_local;
+.float resource_forgeparts_rockets_local;
+.float resource_forgeparts_cells_local;
+.float current_crude_local;	
+.float capacity_crude_local;	//Max capacity of the oil tank
+.float current_energy_local;
+.float capacity_energy_local;	//Max capacity of the energy tank
+.float current_housing_local;
+.float capacity_housing_local;	//Max housing capacity
+.float current_food_grain_local;
+.float current_food_greens_local;
+.float current_food_grapes_local;
+.float capacity_food_grain_local;	//Max capacity for grain
+.float capacity_food_greens_local;	//Max capacity for greens
+.float capacity_food_grapes_local;	//Max capacity for grapes
+
+float numberoflocalenergybatterys; //How many global
+float numberoflocaloiltanks; //How many global
+float numberoflocalchemplants; //How many global
+float numberoflocalmunitionsfactories; //How many global
+float numberoflocalforgebuildings; //How many global
+
+
+float orphancontrolpointreaper; //Does it exist?
+
+.float amnt;	//Like cnt, but if you need more.
+.float ammount; //Like count, but if you need more.
+.float ammount2; //used to store misc other values such as resource drain ammount etc.
+.float ammount3; //Another count, if you need more, such as if you need to keep track of how many times a bellows was actuated
+.float ammount4; //Another count, if you need more
+.float ammount5; //Another count, if you need more
+.float ammount6; //Another count, if you need more
+.float ammount7; //Another count, if you need more
+.float rtnvl2; //An additional "return" value
+.float rtnvl3; //An additional "return" value
+.float rtnvl4; //An additional "return" value
+.float rtnvl5; //An additional "return" value
+.string svdstring0; //A saved string
+.string svdstring1; //A saved string
+.string svdstring2; //A saved string
+.string svdstring3; //A saved string
+.string rtstrng; //A "return" string
+.vector amntvec; //like amnt, but a vector
+.vector ammountvec;
+.vector ammount2vec;
+.vector ammount3vec;
+
+.vector prephysplug_movement;
+.vector prephysplug_v_angle;
+.float prephysplug_button_use;
+.float prephysplug_button_hook;
+.float prephysplug_button_jump;
+.float prephysplug_button_crouch;
+
+
+.float stat_sv_hudshownameenemies; //Server control of hud: 0 never, 1 allow, 2 always
+.float rescaleondrop; //ReScale when drop_at_death?
+.float droppedscale; //ReScale when drop_at_death to this.
+
+.float absolute; //Ignore g_weaponreplace_ for this item, g_weaponreplaceallowabsolute must be 1
+.float set_bot_attack; //Set bot_attack on restore (func_breakables)
+.float shootfromside;
+
+//This stuff is used for shootfromside in the weaponsystem:
+.vector prev_org; //To be used for various things like saving old org.
+.float prev_weapon; //Used for saving old weapon, to see if changed.
+
+.float grenades; //How many grenades does player have.
+.float flashbangs; //How many flashbang grenades does player have.
+.float smokenades; //How many smoke grenades does player have.
+.float fragnades; //How many frag grenades does player have.
+.float atmines; //How many at mines does player have.
+.float landmines; //How many land mines does player have.
+.float nadeselected; //Which nade type selected to throw.
+.float nextnadeselecttime; //Slow nade switching
+.float nextmsgspam; //Slow message spam for cmd commands so player can have server sending too many msgs
+.float nextdrink; //Time till you can drink again
+
+//This is for computing blood splatters after bullet penetration
+.float bullethitliving;   //If the bullet hit a living thing
+.float bullethit_species; //The species of it
+.vector bullethit_origin;  //The origin
+.vector bullethit_velocity;  //The velocity
+.entity bullethit_victim; //Who got hit before
+.float bullethit_dmg;
+.float bullethit_dmgforce;
+
+.float teamlockallow; //Allow (built) door to be teamlocked
+.float teamlock;      //Is door teamlocked
+.entity teamlockent;  //What controlpoint to check to determine team (control point usually)
+
+//Entities which will spawn an entity.friendent each which contains info on friend
+.float hasfriends;
+.entity friendent;
+.entity friend0;
+.entity friend1;
+.entity friend2;
+.entity friend3;
+.entity friend4;
+.entity friend5;
+.entity friend6;
+.entity friend7;
+.entity friend8;
+.entity friend9;
+.entity exfriendent; //Got to use this as the other gets overwritten
+.entity exfriend0;
+.entity exfriend1;
+.entity exfriend2;
+.entity exfriend3;
+.entity exfriend4;
+.entity exfriend5;
+.entity exfriend6;
+.entity exfriend7;
+.entity exfriend8;
+.entity exfriend9;
+.float hastolerateds;
+.entity toleratedent;
+.entity tolerated0;
+.entity tolerated1;
+.entity tolerated2;
+.entity tolerated3;
+.entity tolerated4;
+.entity tolerated5;
+.entity tolerated6;
+.entity tolerated7;
+.entity tolerated8;
+.entity tolerated9;
+.float tolerateall;
+.float hashateds;
+.entity hatedent;
+.entity hated0;
+.entity hated1;
+.entity hated2;
+.entity hated3;
+.entity hated4;
+.entity hated5;
+.entity hated6;
+.entity hated7;
+.entity hated8;
+.entity hated9;
+.entity exhatedent; //Got to use this as the other gets overwritten
+.entity exhated0;
+.entity exhated1;
+.entity exhated2;
+.entity exhated3;
+.entity exhated4;
+.entity exhated5;
+.entity exhated6;
+.entity exhated7;
+.entity exhated8;
+.entity exhated9;
+
+.float shootfromaltaim; //toggle alt aimpoint on off if this feature enabled (bring weapon to face center etc)
+.float shootfromaltaim_update; //shall we update the aimpoint next use of the weapon
+
+.float weaponaltaim_use;
+.vector weaponaltaim;
+
+.float weaponinitaimmotif_use; //1= relative, 2 = absolute (like weaponaltaim)
+.vector weaponinitaimmotif;	//For fixing initial v_ weapon placement interacting with shootfromfixedorigin
+
+.float vehicle_reloadplususe;     //Use Special exiting code to delay exiting so Use key can be used in vehicle, see mg_scorpion.qc
+.float vehicle_reloadplususeexit; //May we exit the vehicle next frame if use pressed?
+
+.float canbeburied; //Can this thing be buried with the bury command (such as a mine on dirt)
+
+.float iscontainer; //For chests, lootables, etc
+.float iscontainer_storage; //Max it can contain, if set
+
+.float isfurniture; //Flag to tell tanks this is furniture, it can be destroyed by rolling over it even if nopounddown
+.float nopounddown; //Don't want tanks to crush this down into the ground.
+
+.float nogibblocked; //Don't gib blocked thing "just to make sure"
+
+.float building_class; //Used for building spawning at startup: What type of building is it: industrial, middleclass house, lowerclass, upperclass, commercial, airport, military?
+.float building_subclass; //Extended to differ DenseResidential etc, to give more hints for grass color etc
+.float building_updatebase; //Weather to update base if different types of surroundings are found, set to parents building_class if so
+.float building_updatebaserank; //What class, don't downgrade a highgrade store
+
+.float gibscale; //Should we scale our gibs beyond what the model's scale is?
+
+.float monsterismonolith; //If under this spell, previous scale is set here
+.float monsterismouse; //If under this spell, previous scale is set here
+
+.float monster_isquakezombie; //If we are a quake one style zombie //only explosions kill us for real
+.float monster_isquakezombie_shoulddie; //If we are a quake one style zombie and should die
+.float monster_noteamcolors; //Don't paint in teamcolors, even if on team
+.float monster_usedhousing;	//multitool/utilitool: how much housing a recruited monster used
+.float monster_usedhousingteam; //multitool/utilitool: what team monster was initally on at the time spawned by recruitment
+.float monster_norespawn; //multitool/utilitool: monster does not respawn
+.float monster_keepowner; //monster keeps owner regardless
+.float monster_nodrop; //Do not drop monster at spawn
+
+.float hasmanashield; //Time until manashield expires, 0 if none.
+.float hascastfromlife; //Set if cast from life (health points), 0 if not
+.float hasclairvoyance; //Time until clairvoyance expires, 0 if none.
+
+.float hasclairvoyance_lvl; //Level of spell
+.float hasclairvoyance_cameraon; //Later possibly indicate color if used for other spells (1 equals '1 0 0.8', maybe later add 2 equals '0 1 0' etc for forest sense spell etc...)
+.float hasclairvoyance_count;
+.float hasclairvoyance_endseertime;
+.float hasclairvoyance_endwaittime;
+.float hasclairvoyance_nextcastaddexp; //We add to this while remote viewing, next time we cast the spell we get some exp points
+.float hasclairvoyance_camerax;
+.float hasclairvoyance_cameray;
+.float hasclairvoyance_cameraz;
+
+.float numhasdied; //Number of times player/bot/etc has died, unlike the stat is saved like perm blindness. Used for maxlives etc.
+
+.float inventory_annoymsgtime; //Time untill next message, so doesn't flood if your inventory is full and you are picking things up
+.float inventory_itemnosize; //Item doesn't take up space in inventory, so pick up
+
+//For when you're dropping ammo etc so you don't immediatly pick it back up
+.float inventory_nopickuptill; //Time till can be picked up
+.entity inventory_nopickupbytill; //Can't be pick upped by this entity till above (if this is set and person is not this entity, can pick up right away)
+
+.float inventory_permitems; //Dropped items from this entity are permanent (used for map spawned chests)
+
+.float targetpositionprisonmaybefixa; //Maybe we fix the angles if both a and b
+.float targetpositionprisonmaybefixb; //Maybe we fix the angles if both a and b
+
+.float multitool_reparableturret; //Can this turret be repaired by the mutitool/utilitool? (by default only turrets created by multitool buildings)
+.float multitool_repairamnt; //How much repair has been done.
+.float multitool_hassetatstartcastlecolor; //Have we set g_suggested_multitool_castlecolor if applicable?
+
+.float canigniteflame; //Item Can be used to ignite flames (forge etc)
+
+.float phantasmalbarrier_pushltime; //Next time the barrier should make a snd or partical fx for this ent passing through
+
+entity raiseundeadmarker_first; //First one spawned
+entity raiseundeadmarker_previous; //Unless world It's subordinate is set to new one, then Set each time a new one is spawned. 
+float raiseundeadmarker_current;
+float raiseundeadmarker_max; //Set for maximum allowed before we set first to its subordinate, set first to tempent, then remove that previousfirst
+float raiseundeadmarkerenabled; //If certain spell-start cvars are set or the book or scroll is spawned, or the spell used, then we will place markers, otherwise no wasting of ents
+
+.float isabdbld; //Are we an abd building (sc tiles etc). KISS makes it easy to check
+.float abdbld_damagescale_bulldozer; //What is our damagescale for bulldozer, batteringram. If 0, nothing
+.float abdbld_damagescale_normalexplosive; //For non nuke explosives etc? If 0, nothing
+.float abdbldcanburn; //Can we burn?
+.float abdbldextendedsearchclass; //Are we big? (bigger than standard tile, IE: (to center) more: NormaltileAmnt+(1024*B))
+.float isroad; //Are we a road? Set on SC_Tiles road pieces, for instance
+
+.float isbldablbld; //we are a buildablebuilding
+
+.entity cntrlowner; //Control Point, from there look for real owner
+.float spawnpointisofbuildable; //Were we created by a buildable building
+.float spawnpreferences; //Players spawn preferences (any, mine, maponly, normal) 
+
+.float accptcrrdbldspltr; //in w_common, these entities will also accept blood splatter through players (like a wall)
+.float accptcrssbwstklkbld; //We're not a building but we will accept crossbow bolts as if we were, Used mostly for player built doors and other ents you shouldn't rename the classname of
+.float accptlikebuilding; //In Other ways we are like building (for axe, chainsaw, etc), Used mostly for player built doors and other ents you shouldn't rename the classname of
+
+.float objcthitmaterial; //Mainly used for crossbow corner cases, buildable doors being hit by bolts, Skips the material evaluation: If you want to set it for an entity, if the entity is all this material
+
+.float isautoblocktypemultitool; //Automatically set multitool/utilitool blocktype to any if early collision test with this entity returns true, ie: treat it similar to world model for this building attempt
+.float isquestionableblocktypemultitool; //Shields of buildable buildings and such you probably don't want to allow building on, thus do movetype worldonly for those traces (via setting multitool_blocktype temp to 0)
+
+entity failsafespawn0;
+entity failsafespawn1;
+entity failsafespawn2;
+entity failsafespawn3;
+float failsafespawn0found;
+float failsafespawn1found;
+float failsafespawn2found;
+float failsafespawn3found;
+
+entity failsafespawn0_team1;
+entity failsafespawn1_team1;
+entity failsafespawn0_team2;
+entity failsafespawn1_team2;
+entity failsafespawn0_team3;
+entity failsafespawn1_team3;
+entity failsafespawn0_team4;
+entity failsafespawn1_team4;
+float failsafespawn0_team1found;
+float failsafespawn1_team1found;
+float failsafespawn0_team2found;
+float failsafespawn1_team2found;
+float failsafespawn0_team3found;
+float failsafespawn1_team3found;
+float failsafespawn0_team4found;
+float failsafespawn1_team4found;
+
+.float autoclientcolorshirt; //this is for the autoplayercolor feature, so players have different colors autocolor assigned for shirt
+.float autoclientcolorpants; // can be 0 to 14 as above
+.float autoclientcolorset;   //we have allready set automatic colors
+
+.float door_resists_rate; //If set, and doorresists_health is 0, chance it still won't open
+.float door_resists_health; //Door will resist always until this is depleted, trying to open will deplete somewhat
+.float door_resists_nextattempttime; //Next time will register an attempt.
+
+float ambient_temperature; //In centegrade
+float ambient_temperature_uselimits;
+float ambient_temperature_maxx;
+float ambient_temperature_maxy;
+float ambient_temperature_maxz;
+float ambient_temperature_minx;
+float ambient_temperature_miny;
+float ambient_temperature_minz;
+float ambient_temperature_uselimits_reverse;
+
+.float falldamageaccelprotectiontime;
+.vector falldamageaccelprotectionorigin;
+
+.float noimpactingprojectiles; //If this entity is hit, it doesn't allow impact
+
+.float period; //Used for period (time between full phases) of advanced platmovetype for func_rotating
+.float periodtype; //0 = smooth, 1 = resetting
+
+float timesinksactive;
+float timesink_orig_slowmo;
+float timesink_slowmo;
+.entity timesinkent;
+.float timesinkfalldamageaccelprotection;
+
+.entity gracespellent;
+.float gracegivingtime;
+.entity gracegivingent;
+.float gracegivingradius;
+.float gracespellrefire;
+
+.entity vampyricconduitspellent;
+.float vampyricconduitgivingtime;
+.entity vampyricconduitgivingent;
+.float vampyricconduitgivingradius;
+.float vampyricconduitspellrefire;
+
+.float vehicle_alternateaircontrols; //Alternate controls for aeroplanes
+
+.float piercingcausesfire;		//Likelyhood of causing fire jet when struck by bullet
+.float piercingcausesfire_time;		//Time to live
+.float piercingcausesfire_length;	//How far
+.float piercingcausesfire_dmg;		//How much damage per second from jet
+.float piercingcausesfire_intensity;	//How much damage per second for fire
+.float piercingcausesfire_jitter;
+
+.float piercingcausessteam;		//Likelyhood of causing steam jet when struck by bullet
+.float piercingcausessteam_time;	//Time to live
+.float piercingcausessteam_amount;	//How much
+.float piercingcausessteam_speed;	//How fast
+
+.float piercingcausesice;		//Likelyhood of causing ice jet when struck by bullet
+.float piercingcausesice_time;		//Time to live
+.float piercingcausesice_length;	//How far
+.float piercingcausesice_dmg;		//How much damage per second from jet
+.float piercingcausesice_intensity;	//Determines time of freezing
+.float piercingcausesice_jitter;
+
+.float piercingcauseswater;
+.float piercingcauseswater_time;	//Time to live
+.float piercingcauseswater_speed;
+.float piercingcauseswater_jitter;
+
+.float piercingcausespoison;		//Likelyhood of causing poison jet when struck by bullet
+.float piercingcausespoison_time;	//Time to live
+.float piercingcausespoison_length;	//How far
+.float piercingcausespoison_dmg;	//How much damage per second from jet
+.float piercingcausespoison_intensity;	//How much damage per second for poison cloud
+.float piercingcausespoison_jitter;
+
+.float piercingcauseslaser;
+.vector	piercingcauseslaser_colormod;
+.float piercingcauseslaser_time;	//Time to live
+.float piercingcauseslaser_dmg;	//How much damage per second from jet
+.float piercingcauseslaser_alpha;	//
+.float piercingcauseslaser_scale;	//Scale of laser
+.float piercingcauseslaser_modelscale;	//Scale of laserdot
+
+
+.float nohitplotanalysis;		//No HitPlotAnalysis if this is attacking (like a monster but inert)
+.float noaccuracyfrags;			//No appending to accuracy frags for this ent
+
+.float dmgmvmntimpare;	        //Do movement imparement
+.float dmgmvmntimparetime;	//Time impareable damage happened
+.float dmgmvmntimparedthtyp;	//Type of damage (deathtype)
+.entity dmgmvmntimpareatkr;	//Entity who did damage
+
+.float fire_oilfire_entreignite; //fire on ent reignites when exiting oil
+.entity fire_oilfire_entreignite_owner; //By order of whom?
+.float fire_oilfire_entwasinoil; //ent was in oil recently
+.float fire_oilfire_addsentreignite;
+
+float methanereactareasexist; //Do any exist?
+.float ismethanereactarea; //Is a methane vapor area
+
+float chemreactareasexist; //Do any exist?
+.float ischemreactarea; //Is a chemical vapor area
+
+float oilreactareasexist; //Do any exist?
+.float isoilreactarea; //Is a oil vapor area
+
+///////////////////////////////////////////////////////////////////
+//These were added for misc_laser so it could be used with spells//
+.float altdeathtype; //Use an alternative deathtype for something (misc_laser)
+.float altdeathtype_fireadd; //Add fire, if 2 the deathtype is altdeathtype
+.float altdeathtype_fireadd_dmg;
+.float altdeathtype_fireadd_time;
+.entity altdeathtype_fireadd_owner; //Who not to burn..
+
+.float altdeathtype_addspellexp;
+.float altdeathtype_addspellexp_spell; //1 = inferno;
+.float altdeathtype_addspellexp_isscroll;
+.entity altdeathtype_addspellexp_owner;
+
+.float altdeathtype_dmgundeadonly; //Only damage undead
+.float altdeathtype_hitsounds; //Make a sound when something is hit? what sound(set?)
+.float altdeathtype_hitsounds_time; //How long untill allowed again?
+///////////////////////////////////////////////////////////////////
+
+
+
+.float dmgdisorientate;	        //Do movement imparement
+.float dmgdisorientatetime;	//Time impareable damage happened
+.float dmgdisorientatedthtyp;	//Type of damage (deathtype)
+.entity dmgdisorientateatkr;	//Entity who did damage
+
+.entity holylightspellent; //spell entity
+
+entity glsstmrkfirst; //first glass bullet hole mark (decal)
+entity glsstmrklast;  //last one
+.entity glsstmrknextchain; //next in chain
+.entity glsstmrkprevchain; //previous in chain
+float glsstmrkammnt; //total
+
+entity glssshrdfirst; //first glass bullet hole mark (decal)
+entity glssshrdlast;  //last one
+.entity glssshrdnextchain; //next in chain
+.entity glssshrdprevchain; //previous in chain
+float glssshrdammnt; //total
+
+.float hasburned_others_to_death; //Player has burned others to death
+.float hasharmed_prisoner; //Player has harmed prisoner
+.float hascommitted_depraved_act; //Player has committed depraved acts this many times (tortures etc)
+.float hascommitted_act_of_grace; //Player has committed graceful acts this many times (healed etc)
+
+float g_warpzone_defaults_enabled;
+
+.float isfilth;	//filth area (doesn't wash player, even if liquid)
+.float transfer_smell_rate_any;    //air or any
+.float transfer_smell_rate_liquid; //must be in water/slime/lava
+.float transfer_smell_rate_water;  //if in water
+.float transfer_smell_rate_slime;  //if in slime
+.float transfer_smell_rate_lava;   //if in lava
+
+.float nextwaft;
+.entity nextwaft_smell_faeces_ent;
+.float nextwaft_smell_faeces_time;
+.float nextwaft_smell_faeces_amnt;
+
+.entity nextwaft_smell_rottingflesh_ent;
+.float nextwaft_smell_rottingflesh_time;
+.float nextwaft_smell_rottingflesh_amnt;
+
+.entity nextwaft_smell_bodyodor_ent;
+.float nextwaft_smell_bodyodor_time;
+.float nextwaft_smell_bodyodor_amnt;
+
+.float nextwaft;
+.entity nextwaft_smell_roses_ent;
+.float nextwaft_smell_roses_time;
+.float nextwaft_smell_roses_amnt;
+
+.float wasinfilthliquidlastmetabolize;
+
+.float spwnmnstrondth; //Likelyhood to spawn a monster on death of furnishing/monster
+.string spwnmnstrondth_monster; //what monster(s)
+.float spwnmnstrondth_amnt; //amount
+.float spwnmnstrondth_respawns;
+.float spwnmnstrondth_propagate; //propagate these settings to spawned monsters? Through how many generations?
+.float spwnmnstrondth_propagateinf; //do it infinitely
+.float xplodondth; //Likelyhood to explode on death/destruction
+.float xplodondth_type; 
+.float isweak; //spawn with 10pct of normal health
+.float isveryweak; //spawn with 1pct of normal health
+.float readscrollondth; //likelyhood to read a scroll
+.string readscrollondth_spell; //What's it's name (lowercase please)
+.float readscrollondth_amnt; //amount
+.float readscrollondth_lvl; //spell level
+.float readscrollondth_propagate; //propagate these settings to spawned monsters? Through how many generations?
+.float readscrollondth_propagateinf; //do it infinitely
+.float readscrollondth_propagateonly; //No spell for initial
+.string readscrollondth_propagatespell; //Different spell for propagate
+.float readscrollondth_gen; //what generation are we?
+.float readscrollondth_genincrease; //increase spell level each generation? by what multiple?
+
+.float noanimdroppeditems; //dropped items will not be animated;
+
+.float readscrollondth_ontake; //Likelyhood to read the scroll on a take
+.float readscrollondth_ontake_amnt; //How many "charges" over 1?, -1 is infinite, -2 disables
+.float readscrollondth_onput; //Likelyhood to read the scroll on a put
+.float readscrollondth_onput_amnt; //How many "charges" over 1? -1 is infinte, -2 disables
+.float readscrollondth_onsearch; //Likelyhood to read the scroll on a search
+.float readscrollondth_onsearch_amnt; //How many "charges" over 1? -1 is infinte, -2 disables
+.float readscrollondth_notdth; //Not on death
+ 
+.float health_stable_reduce; //Reduce max and stable health by
+.float mana_stable_reduce;
+.float armor_stable_reduce;
+
+.float damage_health_stable_reduce; //When this ent damages something, the health_stable_reduce var of the damaged thing is increased by this ammount, if any damage was done
+
+
+
+.float trapondth; //likelyhood to spring trap
+.float trapondth_trap; //which trap (same as misc_fire_crossbowbolt) 0 (crossbow), 1 (firebolt), 2 (electro), ... 18 (fireball), 19 (ballista), 20 (flamethrower),...etc
+.float trapondth_amnt; //amount of shots?
+.float trapondth_dirstyle; //direction style 0 default settings, 1 no straight, 2 all straight, 3 rand dir, 4 up
+.float trapondth_ontake; //Likelyhood to read the scroll on a take
+.float trapondth_ontake_amnt; //How many "charges" over 1?, -1 is infinite, -2 disables
+.float trapondth_onput; //Likelyhood to read the scroll on a put
+.float trapondth_onput_amnt; //How many "charges" over 1? -1 is infinte, -2 disables
+.float trapondth_onsearch; //Likelyhood to read the scroll on a search
+.float trapondth_onsearch_amnt; //How many "charges" over 1? -1 is infinte, -2 disables
+.float trapondth_notdth; //Not on death
+.float trapondth_onlyonce; //Only actuate once, (or X number of times), regardless of how
+.float trapondth_onlyonce_cnt; //a counter for above
+
+ 
+.float darkritual_mana_max;
+.float darkritual_mana_stable;
+
+
+.float playerclass;
+.float playerclass_desired;

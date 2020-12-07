@@ -1,0 +1,136 @@
+Note: Yes the rotary guns are supposed to be able to rotate while not firing
+if they are not yet loaded or ran out of ammunition.
+They are electrically driven, not driven by the energy expelled by
+the ammunition. Thus when the weapon is not loaded and you press
+the button, around and around it turns.
+
+Mounted guns have to be loaded before firing, also (R)
+
+
+Here is some info about the vehicle code and hitboxes in this directory:
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+
+It is true that the smaller cars mostly use one hitbox.
+A number of other vehicles use multiple hitboxes.
+The tanks all use 3 hitboxes.
+The limos use 5 hitboxes.
+
+(The rotors for the helicopters use a similar
+idea and use 16 hitboxes to simulate where
+the rotors are for gibbing people you
+hit with them)
+
+You can see them by doing r_showbboxes 4
+in the console.
+
+(If you look in tankt27.qc you'll see code
+for the tank hitboxes, cruizerlimo.qc has code
+for the car /regular vehicle style hitboxes,
+sparrow.qc has code for the rotor damage boxes)
+(grep/search for hitbox
+(qc code is in the data/zzzzzblababla.pk3 archive)
+
+----Code stuff------------------------------------------------------------
+Adding more hitboxes to a vehicle is fairly straight forward.
+Stuff has to be added to a few subroutines,
+First the vehicle die subroutine needs some lines to remove the hitboxen
+at vehicle death:
+void cruizerlimo_die()
+At the very end we add:
+tankt27_hitbox_die(self.hitboxft); //Fine, doesnt do anything tank specific
+tankt27_hitbox_die(self.hitboxmf); //Middle front
+tankt27_hitbox_die(self.hitboxmb); //Mid back
+tankt27_hitbox_die(self.hitboxbk);
+
+The vehicle spawn function needs some lines added too, for spawning the hitboxen
+void cruizerlimo_spawn(float _f)
+In the if(!self.gun1) block of code we add:
+self.hitboxft = spawn();
+self.hitboxmf = spawn();
+self.hitboxmb = spawn();
+self.hitboxbk = spawn();
+
+furtherdown in the same subroutine we add a line that allows people
+to not be "crushed" if they are ontop of the roof:
+self.subordinate = self.hitboxft; //For testing max_z in determining if should crush a player or monster
+self.subordinatespeed = autocvar_g_vehicle_cruizerlimo_speed_forward;
+self.subordinateinertia = autocvar_g_vehicle_tankll24_movement_inertia;
+
+Finally we get down to filling those spawned entities with something to do,
+at the very end of the vehicle's spawn subroutine:
+cruizerlimo_spawn_hitbox(0, self, self.hitboxft, CRUIZERLIMO_MIN_HBF * 0.5, CRUIZERLIMO_MAX_HBF * 0.5, 120, autocvar_g_vehicle_cruizerlimo_health);
+cruizerlimo_spawn_hitbox(0, self, self.hitboxmf, CRUIZERLIMO_MIN_HBB * 0.5, CRUIZERLIMO_MAX_HBB * 0.5, 60, autocvar_g_vehicle_cruizerlimo_health * 0.5);
+cruizerlimo_spawn_hitbox(0, self, self.hitboxmb, CRUIZERLIMO_MIN_HBB * 0.5, CRUIZERLIMO_MAX_HBB * 0.5, -60, autocvar_g_vehicle_cruizerlimo_health * 0.5);
+cruizerlimo_spawn_hitbox(0, self, self.hitboxbk, CRUIZERLIMO_MIN_HBF * 0.5, CRUIZERLIMO_MAX_HBF * 0.5, -120, autocvar_g_vehicle_cruizerlimo_health * 0.5);
+
+The 120, 60, -60, -120 are saying how far away in quakeunits in a straight line the
+extra hitboxes are from the center hitbox.
+
+And then up at the very top of the file we add the constants:
+const vector CRUIZERLIMO_MIN_HBF = '-65 -65 0'; //Back and front trunk for this model
+const vector CRUIZERLIMO_MAX_HBF = '65 65 75';
+
+const vector CRUIZERLIMO_MIN_HBB = '-65 -65 0'; //Middle
+const vector CRUIZERLIMO_MAX_HBB = '65 65 100';
+
+from qcsrc/server/vehicles/cruizerlimo.qc
+
+The way you do it for tanks that have diff types of hitboxes
+is similar but alittle different as to the options you set on the
+spwn hitbox routine and a tank routine used instead.
+(Crushes trees in its way, etc etc). The routines can be set to be
+a "armor" type hitbox or a regular forwarding-damage type.
+Once a hitbox gets all its damage it goes dormant and doesn't protect
+the stuff behind it anymore (armor type), and "falls off" if you will.
+----Code stuff------------------------------------------------------------
+
+Think of how boxes are used to show area below a curve
+in begining calculus.
+
+The hitboxes are used for performance reasons.
+Collisions with models are slow, but it is a supported
+darkplaces engine feature. It just isn't used usually
+excpt for the map itself and buildable buildings.
+
+The hitboxes themselves don't rotate, but their origin is
+changed based on how the model itself is turned, so it works
+out. The more hitboxes addded, the better the contours of the
+model can be 'blocked out'.
+
+You can stand on the different sections of the tanks for this
+reason. 3 hitboxes. Front (low), middle (tall), back (short).
+Front on tank does not forward damage (pure armor), while the
+back does and then some (weak spot).
+
+There are different routines for different types of hitboxes
+in the vehicle code, as you've probably seen.
+
+It is possible to set collision to SOLID_BSP rather than using hitboxes,
+in that case the model is the hitbox. This uses much CPU for
+most models so a better idea would be to box-out a model in
+netradiant and compile as invisible bsp (bsp has volume, unlike
+regular model formats), then have that as a second entity that follows
+your real entity, and have it do the collision stuff.
+
+The extra hitboxes work in a similar manner (follow the main entity,
+forward damamge done to it), but being boxes they are less cpu intensive.
+
+So no showstopper :).
+Yes many small cars use one hitbox, but the longer vehicles and the tanks use
+multiple. The smaller cars were not added more hitboxes because they are almost
+like a box and also it was desired to work on other features, rather than
+really nitpick. Can't burn out on one section of the code. Have to work
+on other things after awhile.
+
+A new mortar tank is coming soon (ofcourse allready uploaded to git) btw.
+Also more things to build.
+
+Thank you for trying the game.
+Note: the online servers use vanilla xonotic, I don't think anyone
+is running a Chaosesque server, so things are different on those,
+they only have the original xonotic vehicles, so none of the
+various added ones with mulitple hitboxes etc.
+(Unless someone set up a chaosesque server ...)
+
